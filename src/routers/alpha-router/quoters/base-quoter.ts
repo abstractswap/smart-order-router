@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber';
-import { Protocol } from '@uniswap/router-sdk';
-import { ChainId, Currency, Token, TradeType } from '@uniswap/sdk-core';
+import { Protocol } from '@abstractswap/router-sdk';
+import { ChainId, Currency, Token, TradeType } from '@abstractswap/sdk-core';
 import _ from 'lodash';
 
 import {
@@ -29,7 +29,7 @@ import {
 } from '../functions/get-candidate-pools';
 import { IGasModel } from '../gas-models';
 
-import { TPool } from '@uniswap/router-sdk/dist/utils/TPool';
+import { TPool } from '@abstractswap/router-sdk/dist/utils/TPool';
 import { GetQuotesResult, GetRoutesResult } from './model/results';
 
 /**

@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber';
-import { Pair } from '@uniswap/v2-sdk';
-import { Pool as V3Pool } from '@uniswap/v3-sdk';
-import { Pool as V4Pool } from '@uniswap/v4-sdk';
+import { Pair } from '@abstractswap/v2-sdk';
+import { Pool as V3Pool } from '@abstractswap/v3-sdk';
+import { Pool as V4Pool } from '@abstractswap/v4-sdk';
 import sinon from 'sinon';
 import {
   CurrencyAmount,

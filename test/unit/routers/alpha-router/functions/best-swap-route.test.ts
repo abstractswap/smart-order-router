@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber';
-import { ChainId, Fraction, TradeType } from '@uniswap/sdk-core';
-import { Pair } from '@uniswap/v2-sdk';
-import { Pool } from '@uniswap/v3-sdk';
+import { ChainId, Fraction, TradeType } from '@abstractswap/sdk-core';
+import { Pair } from '@abstractswap/v2-sdk';
+import { Pool } from '@abstractswap/v3-sdk';
 import JSBI from 'jsbi';
 import _ from 'lodash';
 import sinon from 'sinon';

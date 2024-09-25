@@ -1,8 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { Logger } from '@ethersproject/logger';
-import { SwapRouter, Trade } from '@uniswap/router-sdk';
-import { ChainId, Currency, Token, TradeType } from '@uniswap/sdk-core';
-import { FeeAmount, MethodParameters, Pool, Route } from '@uniswap/v3-sdk';
+import { SwapRouter, Trade } from '@abstractswap/router-sdk';
+import { ChainId, Currency, Token, TradeType } from '@abstractswap/sdk-core';
+import { FeeAmount, MethodParameters, Pool, Route } from '@abstractswap/v3-sdk';
 import _ from 'lodash';
 
 import { IOnChainQuoteProvider, RouteWithQuotes } from '../../providers';

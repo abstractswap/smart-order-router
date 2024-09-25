@@ -1,10 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { BaseProvider } from '@ethersproject/providers';
-import { Protocol, SwapRouter } from '@uniswap/router-sdk';
-import { ChainId, Fraction, Percent, TradeType } from '@uniswap/sdk-core';
-import { Pair } from '@uniswap/v2-sdk';
-import { encodeSqrtRatioX96, Pool as V3Pool, Position } from '@uniswap/v3-sdk';
-import { Pool as V4Pool } from '@uniswap/v4-sdk';
+import { Protocol, SwapRouter } from '@abstractswap/router-sdk';
+import { ChainId, Fraction, Percent, TradeType } from '@abstractswap/sdk-core';
+import { Pair } from '@abstractswap/v2-sdk';
+import { encodeSqrtRatioX96, Pool as V3Pool, Position } from '@abstractswap/v3-sdk';
+import { Pool as V4Pool } from '@abstractswap/v4-sdk';
 import JSBI from 'jsbi';
 import _ from 'lodash';
 import sinon from 'sinon';
@@ -105,7 +105,7 @@ import {
 import {
   InMemoryRouteCachingProvider
 } from '../../providers/caching/route/test-util/inmemory-route-caching-provider';
-import { UniversalRouterVersion } from '@uniswap/universal-router-sdk';
+import { UniversalRouterVersion } from '@abstractswap/universal-router-sdk';
 import {
   V4HeuristicGasModelFactory
 } from '../../../../src/routers/alpha-router/gas-models/v4/v4-heuristic-gas-model';

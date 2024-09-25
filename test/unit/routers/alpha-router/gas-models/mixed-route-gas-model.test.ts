@@ -1,8 +1,8 @@
-import { partitionMixedRouteByProtocol } from '@uniswap/router-sdk';
-import { Currency, CurrencyAmount, Ether } from '@uniswap/sdk-core';
-import { Pair } from '@uniswap/v2-sdk';
-import { Pool as V3Pool } from '@uniswap/v3-sdk';
-import { Pool as V4Pool } from '@uniswap/v4-sdk';
+import { partitionMixedRouteByProtocol } from '@abstractswap/router-sdk';
+import { Currency, CurrencyAmount, Ether } from '@abstractswap/sdk-core';
+import { Pair } from '@abstractswap/v2-sdk';
+import { Pool as V3Pool } from '@abstractswap/v3-sdk';
+import { Pool as V4Pool } from '@abstractswap/v4-sdk';
 import { BigNumber } from 'ethers';
 import {
   DAI_MAINNET,
@@ -37,7 +37,7 @@ import {
   getMockedV3PoolProvider,
 } from './test-util/mocked-dependencies';
 import { getPools } from './test-util/helpers';
-import { TPool } from '@uniswap/router-sdk/dist/utils/TPool';
+import { TPool } from '@abstractswap/router-sdk/dist/utils/TPool';
 
 describe('mixed route gas model tests', () => {
   const gasPriceWei = BigNumber.from(1000000000);

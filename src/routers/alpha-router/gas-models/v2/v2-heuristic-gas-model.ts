@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber';
-import { ChainId, Token } from '@uniswap/sdk-core';
-import { Pair } from '@uniswap/v2-sdk';
+import { ChainId, Token } from '@abstractswap/sdk-core';
+import { Pair } from '@abstractswap/v2-sdk';
 import _ from 'lodash';
 
 import { BaseProvider } from '@ethersproject/providers';

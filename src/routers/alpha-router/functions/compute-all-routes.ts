@@ -1,9 +1,9 @@
-import { Currency, Token } from '@uniswap/sdk-core';
-import { Pair } from '@uniswap/v2-sdk';
-import { Pool as V3Pool } from '@uniswap/v3-sdk';
-import { Pool as V4Pool } from '@uniswap/v4-sdk';
+import { Currency, Token } from '@abstractswap/sdk-core';
+import { Pair } from '@abstractswap/v2-sdk';
+import { Pool as V3Pool } from '@abstractswap/v3-sdk';
+import { Pool as V4Pool } from '@abstractswap/v4-sdk';
 
-import { TPool } from '@uniswap/router-sdk/dist/utils/TPool';
+import { TPool } from '@abstractswap/router-sdk/dist/utils/TPool';
 import { log } from '../../../util/log';
 import { poolToString, routeToString } from '../../../util/routes';
 import {

@@ -1,4 +1,4 @@
-import { ChainId, Token } from '@uniswap/sdk-core';
+import { ChainId, Token } from '@abstractswap/sdk-core';
 import {
   CurrencyAmount,
   ID_TO_PROVIDER,
@@ -8,8 +8,8 @@ import {
   MixedRoute
 } from '../../../src';
 import { JsonRpcProvider } from '@ethersproject/providers';
-import { Pool } from '@uniswap/v4-sdk';
-import { ADDRESS_ZERO } from '@uniswap/v3-sdk';
+import { Pool } from '@abstractswap/v4-sdk';
+import { ADDRESS_ZERO } from '@abstractswap/v3-sdk';
 import dotenv from 'dotenv';
 import JSBI from 'jsbi';
 import { ProviderConfig } from '../../../src/providers/provider';

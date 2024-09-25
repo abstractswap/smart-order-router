@@ -3,15 +3,15 @@ import {
   Protocol,
   SwapRouter as SwapRouter02,
   Trade,
-} from '@uniswap/router-sdk';
-import { ChainId, Currency, TradeType } from '@uniswap/sdk-core';
+} from '@abstractswap/router-sdk';
+import { ChainId, Currency, TradeType } from '@abstractswap/sdk-core';
 import {
   SwapRouter as UniversalRouter,
   UNIVERSAL_ROUTER_ADDRESS,
-} from '@uniswap/universal-router-sdk';
-import { Route as V2RouteRaw } from '@uniswap/v2-sdk';
-import { Route as V3RouteRaw } from '@uniswap/v3-sdk';
-import { Route as V4RouteRaw } from '@uniswap/v4-sdk';
+} from '@abstractswap/universal-router-sdk';
+import { Route as V2RouteRaw } from '@abstractswap/v2-sdk';
+import { Route as V3RouteRaw } from '@abstractswap/v3-sdk';
+import { Route as V4RouteRaw } from '@abstractswap/v4-sdk';
 import _ from 'lodash';
 
 import {

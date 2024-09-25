@@ -4,13 +4,13 @@
  * @export
  * @interface IRouteCachingProvider
  */
-import { Protocol } from '@uniswap/router-sdk';
+import { Protocol } from '@abstractswap/router-sdk';
 import {
   ChainId,
   Currency,
   CurrencyAmount,
   TradeType,
-} from '@uniswap/sdk-core';
+} from '@abstractswap/sdk-core';
 
 import { CacheMode } from './model';
 import { CachedRoutes } from './model/cached-routes';

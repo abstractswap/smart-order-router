@@ -1,8 +1,8 @@
-import { ADDRESS_ZERO, Protocol } from '@uniswap/router-sdk';
-import { Currency, Percent } from '@uniswap/sdk-core';
-import { Pair } from '@uniswap/v2-sdk';
-import { Pool as V3Pool } from '@uniswap/v3-sdk';
-import { Pool as V4Pool } from '@uniswap/v4-sdk';
+import { ADDRESS_ZERO, Protocol } from '@abstractswap/router-sdk';
+import { Currency, Percent } from '@abstractswap/sdk-core';
+import { Pair } from '@abstractswap/v2-sdk';
+import { Pool as V3Pool } from '@abstractswap/v3-sdk';
+import { Pool as V4Pool } from '@abstractswap/v4-sdk';
 import _ from 'lodash';
 
 import {
@@ -13,7 +13,7 @@ import { MixedRoute, SupportedRoutes } from '../routers/router';
 
 import { V3_CORE_FACTORY_ADDRESSES } from './addresses';
 
-import { TPool } from '@uniswap/router-sdk/dist/utils/TPool';
+import { TPool } from '@abstractswap/router-sdk/dist/utils/TPool';
 import { CurrencyAmount } from '.';
 import { CachedRoutes } from '../providers';
 

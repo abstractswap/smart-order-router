@@ -1,5 +1,5 @@
-import { Protocol } from '@uniswap/router-sdk';
-import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core';
+import { Protocol } from '@abstractswap/router-sdk';
+import { ChainId, Currency, CurrencyAmount, TradeType } from '@abstractswap/sdk-core';
 import { CachedRoutes, CacheMode, IRouteCachingProvider } from '../../../../../../src';
 
 export class InMemoryRouteCachingProvider extends IRouteCachingProvider {

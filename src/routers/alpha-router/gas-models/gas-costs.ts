@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber';
-import { ChainId, Currency } from '@uniswap/sdk-core';
+import { ChainId, Currency } from '@abstractswap/sdk-core';
 
-import { Protocol } from '@uniswap/router-sdk';
+import { Protocol } from '@abstractswap/router-sdk';
 import { AAVE_MAINNET, LIDO_MAINNET } from '../../../providers';
 import { V3Route, V4Route } from '../../router';
 
