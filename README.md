@@ -235,6 +235,11 @@ Total ticks crossed: 7
 ./bin/cli quote --tokenIn 0x5aea5775959fbc2557cc8789bc1bf90a239d9a91 --tokenOut 0x1d17cbcf0d6d143135ae902365d2e5e2a16538d4 --amount 10 --exactIn --minSplits 1 --protocols v3 --router alpha --chainId 324
 ```
 
+## Abstract testnet
+
+```
+./bin/cli quote --tokenIn 0xe4C7fBB0a626ed208021ccabA6Be1566905E2dFc --tokenOut 0x9EDCde0257F2386Ce177C3a7FCdd97787F0D841d --amount 10 --exactIn --minSplits 1 --protocols v2,v3,mixed --chainId 11124
+```
 
 ## Adding a new Chain
 
