@@ -23,7 +23,6 @@ import {
   ETH_BNB,
   OP_OPTIMISM,
   USDB_BLAST,
-  USDCE_ZKSYNC,
   USDC_ABSTRACT_TESTNET,
   USDC_ARBITRUM,
   USDC_AVAX,
@@ -36,6 +35,7 @@ import {
   USDC_POLYGON,
   USDC_ZERO,
   USDC_ZKSYNC,
+  USDCE_ZKSYNC,
   USDT_ARBITRUM,
   USDT_BNB,
   USDT_MAINNET,
@@ -127,10 +127,7 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     WRAPPED_NATIVE_CURRENCY[ChainId.ABSTRACT_TESTNET]!,
     USDC_ABSTRACT_TESTNET,
   ],
-  [ChainId.ZERO]: [
-    WRAPPED_NATIVE_CURRENCY[ChainId.ZERO]!,
-    USDC_ZERO,
-  ],
+  [ChainId.ZERO]: [WRAPPED_NATIVE_CURRENCY[ChainId.ZERO]!, USDC_ZERO],
 };
 
 export interface IV3SubgraphProvider {
@@ -151,7 +148,8 @@ export interface ISubgraphProvider<TSubgraphPool extends SubgraphPool> {
 
 export abstract class CachingSubgraphProvider<
   TSubgraphPool extends SubgraphPool
-> implements ISubgraphProvider<TSubgraphPool> {
+> implements ISubgraphProvider<TSubgraphPool>
+{
   private SUBGRAPH_KEY = (chainId: ChainId) =>
     `subgraph-pools-${this.protocol}-${chainId}`;
 
@@ -167,7 +165,7 @@ export abstract class CachingSubgraphProvider<
     protected subgraphProvider: ISubgraphProvider<TSubgraphPool>,
     private cache: ICache<TSubgraphPool[]>,
     private protocol: Protocol
-  ) { }
+  ) {}
 
   public async getPools(): Promise<TSubgraphPool[]> {
     const cachedPools = await this.cache.get(this.SUBGRAPH_KEY(this.chainId));
