@@ -985,6 +985,8 @@ export const USDC_ON = (chainId: ChainId): Token => {
       return USDCE_ZKSYNC;
     case ChainId.ABSTRACT_TESTNET:
       return USDC_ABSTRACT_TESTNET;
+    case ChainId.ZERO:
+      return USDC_ZERO;
     default:
       throw new Error(`Chain id: ${chainId} not supported`);
   }
