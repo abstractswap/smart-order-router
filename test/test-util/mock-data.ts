@@ -103,8 +103,30 @@ export const USDC_WETH_V4_LOW = new V4Pool(
   0
 );
 
+export const USDC_ETH_V4_LOW = new V4Pool(
+  USDC,
+  Ether.onChain(ChainId.MAINNET),
+  FeeAmount.LOW,
+  10,
+  ADDRESS_ZERO,
+  encodeSqrtRatioX96(1, 1),
+  500,
+  0
+);
+
 export const WETH9_USDT_V4_LOW = new V4Pool(
   WRAPPED_NATIVE_CURRENCY[1]!,
+  USDT,
+  FeeAmount.LOW,
+  10,
+  ADDRESS_ZERO,
+  encodeSqrtRatioX96(1, 1),
+  200,
+  0
+);
+
+export const ETH_USDT_V4_LOW = new V4Pool(
+  Ether.onChain(ChainId.MAINNET),
   USDT,
   FeeAmount.LOW,
   10,
@@ -147,9 +169,31 @@ export const UNI_WETH_V4_MEDIUM = new V4Pool(
   0
 );
 
+export const UNI_ETH_V4_MEDIUM = new V4Pool(
+  Ether.onChain(ChainId.MAINNET),
+  UNI_MAINNET,
+  FeeAmount.MEDIUM,
+  60,
+  ADDRESS_ZERO,
+  encodeSqrtRatioX96(1, 1),
+  8,
+  0
+);
+
 export const DAI_WETH_V4_MEDIUM = new V4Pool(
   DAI,
   WRAPPED_NATIVE_CURRENCY[1]!,
+  FeeAmount.MEDIUM,
+  60,
+  ADDRESS_ZERO,
+  encodeSqrtRatioX96(1, 1),
+  8,
+  0
+);
+
+export const DAI_ETH_V4_MEDIUM = new V4Pool(
+  DAI,
+  Ether.onChain(ChainId.MAINNET),
   FeeAmount.MEDIUM,
   60,
   ADDRESS_ZERO,
@@ -227,6 +271,14 @@ export const USDC_DAI_LOW = new V3Pool(
   USDC,
   DAI,
   FeeAmount.LOW,
+  encodeSqrtRatioX96(1, 1),
+  10,
+  0
+);
+export const USDC_DAI_LOW_200 = new V3Pool(
+  USDC,
+  DAI,
+  FeeAmount.LOW_200,
   encodeSqrtRatioX96(1, 1),
   10,
   0

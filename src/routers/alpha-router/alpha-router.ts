@@ -10,6 +10,7 @@ import {
   TradeType,
 } from '@abstractswap/sdk-core';
 import { TokenList } from '@uniswap/token-lists';
+import { UniversalRouterVersion } from '@abstractswap/universal-router-sdk';
 import { Pool, Position, SqrtPriceMath, TickMath } from '@abstractswap/v3-sdk';
 import retry from 'async-retry';
 import JSBI from 'jsbi';
@@ -85,6 +86,11 @@ import {
   V3PoolProvider,
 } from '../../providers/v3/pool-provider';
 import { IV3SubgraphProvider } from '../../providers/v3/subgraph-provider';
+import { CachingV4PoolProvider } from '../../providers/v4/caching-pool-provider';
+import {
+  IV4PoolProvider,
+  V4PoolProvider,
+} from '../../providers/v4/pool-provider';
 import { Erc20__factory } from '../../types/other/factories/Erc20__factory';
 import {
   getAddress,
@@ -141,12 +147,15 @@ import {
   V4Route,
 } from '../router';
 
+<<<<<<< HEAD
 import { UniversalRouterVersion } from '@abstractswap/universal-router-sdk';
 import { CachingV4PoolProvider } from '../../providers/v4/caching-pool-provider';
 import {
   IV4PoolProvider,
   V4PoolProvider,
 } from '../../providers/v4/pool-provider';
+=======
+>>>>>>> dee91f1516f8e9c768769c7e810978a0cba819e0
 import {
   DEFAULT_ROUTING_CONFIG_BY_CHAIN,
   ETH_GAS_STATION_API_URL,
@@ -2097,8 +2106,8 @@ export class AlphaRouter
     ) {
       // if (v4ProtocolSpecified || noProtocolsSpecified) {
       v4CandidatePoolsPromise = getV4CandidatePools({
-        tokenIn,
-        tokenOut,
+        currencyIn: tokenIn,
+        currencyOut: tokenOut,
         tokenProvider: this.tokenProvider,
         blockedTokenListProvider: this.blockedTokenListProvider,
         poolProvider: this.v4PoolProvider,
