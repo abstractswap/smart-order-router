@@ -49,6 +49,7 @@ import {
   USDC_POLYGON,
   USDC_SEPOLIA,
   USDC_WORMHOLE_CELO,
+  USDC_ZERO,
   USDC_ZKSYNC,
   USDC_ZORA,
   USDT_ARBITRUM,
@@ -124,6 +125,7 @@ export const usdGasTokensByChain: { [chainId in ChainId]?: Token[] } = {
   [ChainId.ZORA]: [USDC_ZORA],
   [ChainId.ZKSYNC]: [DAI_ZKSYNC, USDCE_ZKSYNC, USDC_ZKSYNC],
   [ChainId.ABSTRACT_TESTNET]: [USDC_ABSTRACT_TESTNET],
+  [ChainId.ZERO]: [USDC_ZERO],
 };
 
 export type L1ToL2GasCosts = {

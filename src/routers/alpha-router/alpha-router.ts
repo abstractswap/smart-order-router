@@ -670,6 +670,7 @@ export class AlphaRouter
           break;
         case ChainId.ZKSYNC:
         case ChainId.ABSTRACT_TESTNET:
+        case ChainId.ZERO:
           this.onChainQuoteProvider = new OnChainQuoteProvider(
             chainId,
             provider,

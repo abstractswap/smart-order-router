@@ -44,6 +44,7 @@ export const V3_CORE_FACTORY_ADDRESSES: AddressMap = {
   [ChainId.ZORA]: CHAIN_TO_ADDRESSES_MAP[ChainId.ZORA].v3CoreFactoryAddress,
   [ChainId.ZKSYNC]: CHAIN_TO_ADDRESSES_MAP[ChainId.ZKSYNC].v3CoreFactoryAddress,
   [ChainId.ABSTRACT_TESTNET]: CHAIN_TO_ADDRESSES_MAP[ChainId.ABSTRACT_TESTNET].v3CoreFactoryAddress,
+  [ChainId.ZERO]: CHAIN_TO_ADDRESSES_MAP[ChainId.ZERO].v3CoreFactoryAddress,
   // TODO: Gnosis + Moonbeam contracts to be deployed
 };
 
@@ -70,6 +71,7 @@ export const QUOTER_V2_ADDRESSES: AddressMap = {
   [ChainId.ZORA]: CHAIN_TO_ADDRESSES_MAP[ChainId.ZORA].quoterAddress,
   [ChainId.ZKSYNC]: CHAIN_TO_ADDRESSES_MAP[ChainId.ZKSYNC].quoterAddress,
   [ChainId.ABSTRACT_TESTNET]: CHAIN_TO_ADDRESSES_MAP[ChainId.ABSTRACT_TESTNET].quoterAddress,
+  [ChainId.ZERO]: CHAIN_TO_ADDRESSES_MAP[ChainId.ZERO].quoterAddress,
   // TODO: Gnosis + Moonbeam contracts to be deployed
 };
 
@@ -130,6 +132,7 @@ export const UNISWAP_MULTICALL_ADDRESSES: AddressMap = {
   [ChainId.ZORA]: CHAIN_TO_ADDRESSES_MAP[ChainId.ZORA].multicallAddress,
   [ChainId.ZKSYNC]: CHAIN_TO_ADDRESSES_MAP[ChainId.ZKSYNC].multicallAddress,
   [ChainId.ABSTRACT_TESTNET]: CHAIN_TO_ADDRESSES_MAP[ChainId.ABSTRACT_TESTNET].multicallAddress,
+  [ChainId.ZERO]: CHAIN_TO_ADDRESSES_MAP[ChainId.ZERO].multicallAddress,
   // TODO: Gnosis + Moonbeam contracts to be deployed
 };
 
@@ -295,6 +298,13 @@ export const WETH9: {
   [ChainId.ABSTRACT_TESTNET]: new Token(
     ChainId.ABSTRACT_TESTNET,
     '0x9EDCde0257F2386Ce177C3a7FCdd97787F0D841d',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [ChainId.ZERO]: new Token(
+    ChainId.ZERO,
+    '0xAc98B49576B1C892ba6BFae08fE1BB0d80Cf599c',
     18,
     'WETH',
     'Wrapped Ether'
