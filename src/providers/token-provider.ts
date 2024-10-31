@@ -704,6 +704,14 @@ export const USDC_ABSTRACT_TESTNET = new Token(
   'USDC'
 );
 
+export const USDC_ZERO = new Token(
+  ChainId.ZERO,
+  '0x6a6394F47DD0BAF794808F2749C09bd4Ee874E70',
+  6,
+  'USDC',
+  'USDC'
+);
+
 export class TokenProvider implements ITokenProvider {
   constructor(
     private chainId: ChainId,

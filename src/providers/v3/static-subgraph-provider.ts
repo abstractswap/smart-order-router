@@ -47,6 +47,7 @@ import {
   USDC_OPTIMISM_GOERLI,
   USDC_POLYGON,
   USDC_SEPOLIA,
+  USDC_ZERO,
   USDC_ZKSYNC,
   USDT_ARBITRUM,
   USDT_BNB,
@@ -180,6 +181,10 @@ const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     WRAPPED_NATIVE_CURRENCY[ChainId.ABSTRACT_TESTNET]!,
     USDC_ABSTRACT_TESTNET,
   ],
+  [ChainId.ZERO]: [
+    WRAPPED_NATIVE_CURRENCY[ChainId.ZERO]!,
+    USDC_ZERO,
+  ],
 };
 
 /**
@@ -197,7 +202,7 @@ export class StaticV3SubgraphProvider implements IV3SubgraphProvider {
   constructor(
     private chainId: ChainId,
     private poolProvider: IV3PoolProvider
-  ) {}
+  ) { }
 
   public async getPools(
     tokenIn?: Token,

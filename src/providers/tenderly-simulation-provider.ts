@@ -148,6 +148,7 @@ export const TENDERLY_NOT_SUPPORTED_CHAINS = [
   ChainId.CELO_ALFAJORES,
   ChainId.ZKSYNC,
   ChainId.ABSTRACT_TESTNET,
+  ChainId.ZERO
 ];
 
 // We multiply tenderly gas limit by this to overestimate gas limit
