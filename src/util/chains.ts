@@ -27,7 +27,9 @@ export const SUPPORTED_CHAINS: ChainId[] = [
   ChainId.ZORA,
   ChainId.ZKSYNC,
   ChainId.ABSTRACT_TESTNET,
-  ChainId.ZERO
+  ChainId.ZERO,
+  ChainId.WORLDCHAIN,
+  ChainId.ASTROCHAIN_SEPOLIA,
   // Gnosis and Moonbeam don't yet have contracts deployed yet
 ];
 
@@ -47,6 +49,12 @@ export const V2_SUPPORTED = [
 
 export const V4_SUPPORTED = [ChainId.SEPOLIA];
 
+export const MIXED_SUPPORTED = [
+  ChainId.MAINNET,
+  ChainId.SEPOLIA,
+  ChainId.GOERLI,
+];
+
 export const HAS_L1_FEE = [
   ChainId.OPTIMISM,
   ChainId.OPTIMISM_GOERLI,
@@ -58,6 +66,8 @@ export const HAS_L1_FEE = [
   ChainId.BASE_GOERLI,
   ChainId.BLAST,
   ChainId.ZORA,
+  ChainId.WORLDCHAIN,
+  ChainId.ASTROCHAIN_SEPOLIA,
 ];
 
 export const NETWORKS_WITH_SAME_UNISWAP_ADDRESSES = [
@@ -119,6 +129,10 @@ export const ID_TO_CHAIN_ID = (id: number): ChainId => {
       return ChainId.ABSTRACT_TESTNET;
     case 543210:
       return ChainId.ZERO;
+    case 480:
+      return ChainId.WORLDCHAIN;
+    case 1301:
+      return ChainId.ASTROCHAIN_SEPOLIA;
     default:
       throw new Error(`Unknown chain id: ${id}`);
   }
@@ -148,7 +162,9 @@ export enum ChainName {
   ZORA = 'zora-mainnet',
   ZKSYNC = 'zksync-mainnet',
   ABSTRACT_TESTNET = 'abstract-testnet',
-  ZERO = 'zero'
+  ZERO = 'zero',
+  WORLDCHAIN = 'worldchain-mainnet',
+  ASTROCHAIN_SEPOLIA = 'astrochain-sepolia',
 }
 
 export enum NativeCurrencyName {
@@ -243,12 +259,21 @@ export const NATIVE_NAMES_BY_ID: { [chainId: number]: string[] } = {
     'ETHER',
     '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
   ],
-  [ChainId.ABSTRACT_TESTNET]: [
+  [ChainId.ABSTRACT_TESTNET]: [ 'ETH',
+    'ETHER',
+    '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+  ],
+  [ChainId.WORLDCHAIN]: [
     'ETH',
     'ETHER',
     '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
   ],
-  [ChainId.ZERO]: [
+  [ChainId.ZERO]:[
+    'ETH',
+    'ETHER',
+    '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+  ],
+  [ChainId.ASTROCHAIN_SEPOLIA]: [
     'ETH',
     'ETHER',
     '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
@@ -279,6 +304,8 @@ export const NATIVE_CURRENCY: { [chainId: number]: NativeCurrencyName } = {
   [ChainId.ZKSYNC]: NativeCurrencyName.ETHER,
   [ChainId.ABSTRACT_TESTNET]: NativeCurrencyName.ETHER,
   [ChainId.ZERO]: NativeCurrencyName.ETHER,
+  [ChainId.WORLDCHAIN]: NativeCurrencyName.ETHER,
+  [ChainId.ASTROCHAIN_SEPOLIA]: NativeCurrencyName.ETHER,
 };
 
 export const ID_TO_NETWORK_NAME = (id: number): ChainName => {
@@ -331,6 +358,10 @@ export const ID_TO_NETWORK_NAME = (id: number): ChainName => {
       return ChainName.ABSTRACT_TESTNET;
     case 543210:
       return ChainName.ZERO;
+    case 480:
+      return ChainName.WORLDCHAIN;
+    case 1301:
+      return ChainName.ASTROCHAIN_SEPOLIA;
     default:
       throw new Error(`Unknown chain id: ${id}`);
   }
@@ -384,6 +415,10 @@ export const ID_TO_PROVIDER = (id: ChainId): string => {
       return process.env.JSON_RPC_PROVIDER_ABSTRACT_TESTNET!;
     case ChainId.ZERO:
       return process.env.JSON_RPC_PROVIDER_ZERO!;
+    case ChainId.WORLDCHAIN:
+      return process.env.JSON_RPC_PROVIDER_WORLDCHAIN!;
+    case ChainId.ASTROCHAIN_SEPOLIA:
+      return process.env.JSON_RPC_PROVIDER_ASTROCHAIN_SEPOLIA!;
     default:
       throw new Error(`Chain id: ${id} not supported`);
   }
@@ -562,7 +597,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId in ChainId]: Token } = {
   ),
   [ChainId.ABSTRACT_TESTNET]: new Token(
     ChainId.ABSTRACT_TESTNET,
-    '0x9EDCde0257F2386Ce177C3a7FCdd97787F0D841d',
+    '0x9EDCde0257F2386Ce177C3a7FCdd97787F0D841d', 18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [ChainId.WORLDCHAIN]: new Token(
+    ChainId.WORLDCHAIN,
+    '0x4200000000000000000000000000000000000006',
     18,
     'WETH',
     'Wrapped Ether'
@@ -570,6 +611,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId in ChainId]: Token } = {
   [ChainId.ZERO]: new Token(
     ChainId.ZERO,
     '0xAc98B49576B1C892ba6BFae08fE1BB0d80Cf599c',
+     18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [ChainId.ASTROCHAIN_SEPOLIA]: new Token(
+    ChainId.ASTROCHAIN_SEPOLIA,
+    '0x4200000000000000000000000000000000000006',
     18,
     'WETH',
     'Wrapped Ether'

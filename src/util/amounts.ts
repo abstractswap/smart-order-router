@@ -1,10 +1,11 @@
 import { parseUnits } from '@ethersproject/units';
+import { ADDRESS_ZERO } from '@abstractswap/router-sdk';
 import {
   ChainId,
   Currency,
   CurrencyAmount as CurrencyAmountRaw,
 } from '@abstractswap/sdk-core';
-import { FeeAmount } from '@abstractswap/v3-sdk';
+import { FeeAmount, TICK_SPACINGS } from '@abstractswap/v3-sdk';
 import JSBI from 'jsbi';
 
 export class CurrencyAmount extends CurrencyAmountRaw<Currency> {}
@@ -72,4 +73,25 @@ export function getApplicableV3FeeAmounts(chainId: ChainId): FeeAmount[] {
   }
 
   return feeAmounts;
+}
+
+export function getApplicableV4FeesTickspacingsHooks(
+  chainId: ChainId
+): Array<[number, number, string]> {
+  const feeAmounts = [
+    FeeAmount.HIGH,
+    FeeAmount.MEDIUM,
+    FeeAmount.LOW,
+    FeeAmount.LOWEST,
+  ];
+
+  if (chainId === ChainId.BASE) {
+    feeAmounts.push(FeeAmount.LOW_200, FeeAmount.LOW_300, FeeAmount.LOW_400);
+  }
+
+  return feeAmounts.map((feeAmount) => [
+    feeAmount as number,
+    TICK_SPACINGS[feeAmount],
+    ADDRESS_ZERO,
+  ]);
 }

@@ -45,6 +45,10 @@ export const V3_CORE_FACTORY_ADDRESSES: AddressMap = {
   [ChainId.ZKSYNC]: CHAIN_TO_ADDRESSES_MAP[ChainId.ZKSYNC].v3CoreFactoryAddress,
   [ChainId.ABSTRACT_TESTNET]: CHAIN_TO_ADDRESSES_MAP[ChainId.ABSTRACT_TESTNET].v3CoreFactoryAddress,
   [ChainId.ZERO]: CHAIN_TO_ADDRESSES_MAP[ChainId.ZERO].v3CoreFactoryAddress,
+  [ChainId.WORLDCHAIN]:
+    CHAIN_TO_ADDRESSES_MAP[ChainId.WORLDCHAIN].v3CoreFactoryAddress,
+  [ChainId.ASTROCHAIN_SEPOLIA]:
+    CHAIN_TO_ADDRESSES_MAP[ChainId.ASTROCHAIN_SEPOLIA].v3CoreFactoryAddress,
   // TODO: Gnosis + Moonbeam contracts to be deployed
 };
 
@@ -72,6 +76,10 @@ export const QUOTER_V2_ADDRESSES: AddressMap = {
   [ChainId.ZKSYNC]: CHAIN_TO_ADDRESSES_MAP[ChainId.ZKSYNC].quoterAddress,
   [ChainId.ABSTRACT_TESTNET]: CHAIN_TO_ADDRESSES_MAP[ChainId.ABSTRACT_TESTNET].quoterAddress,
   [ChainId.ZERO]: CHAIN_TO_ADDRESSES_MAP[ChainId.ZERO].quoterAddress,
+  [ChainId.WORLDCHAIN]:
+    CHAIN_TO_ADDRESSES_MAP[ChainId.WORLDCHAIN].quoterAddress,
+  [ChainId.ASTROCHAIN_SEPOLIA]:
+    CHAIN_TO_ADDRESSES_MAP[ChainId.ASTROCHAIN_SEPOLIA].quoterAddress,
   // TODO: Gnosis + Moonbeam contracts to be deployed
 };
 
@@ -89,11 +97,15 @@ export const NEW_QUOTER_V2_ADDRESSES: AddressMap = {
   [ChainId.BLAST]: '0x9D0F15f2cf58655fDDcD1EE6129C547fDaeD01b1',
   [ChainId.ZORA]: '0x9D0F15f2cf58655fDDcD1EE6129C547fDaeD01b1',
   [ChainId.ZKSYNC]: '0x071Bd2063dF031EDd110E27C6F4CDe50A3DeF2d4',
+  [ChainId.WORLDCHAIN]:
+    CHAIN_TO_ADDRESSES_MAP[ChainId.WORLDCHAIN].quoterAddress, // TODO: deploy view-only-quoter to worldchain
+  [ChainId.ASTROCHAIN_SEPOLIA]:
+    CHAIN_TO_ADDRESSES_MAP[ChainId.ASTROCHAIN_SEPOLIA].quoterAddress, // TODO: deploy view-only-quoter to astrochain
 };
 
 export const PROTOCOL_V4_QUOTER_ADDRESSES: AddressMap = {
   ...constructSameAddressMap('0xf3a39c86dbd13c45365e57fb90fe413371f65af8'),
-  [ChainId.SEPOLIA]: '0x8C41f1696360ca987803a4c24B8b7c36dFd61c4d',
+  [ChainId.SEPOLIA]: CHAIN_TO_ADDRESSES_MAP[ChainId.SEPOLIA].v4QuoterAddress,
 };
 
 export const MIXED_ROUTE_QUOTER_V1_ADDRESSES: AddressMap = {
@@ -103,9 +115,9 @@ export const MIXED_ROUTE_QUOTER_V1_ADDRESSES: AddressMap = {
     CHAIN_TO_ADDRESSES_MAP[ChainId.GOERLI].mixedRouteQuoterV1Address,
 };
 
-// TODO: use CHAIN_TO_ADDRESSES_MAP[ChainId.GOERLI].mixedRouteQuoterV2Address once sdk-core finalizes deploy addresses
 export const MIXED_ROUTE_QUOTER_V2_ADDRESSES: AddressMap = {
-  [ChainId.SEPOLIA]: '0x4745f77b56a0e2294426e3936dc4fab68d9543cd',
+  [ChainId.SEPOLIA]:
+    CHAIN_TO_ADDRESSES_MAP[ChainId.SEPOLIA].mixedRouteQuoterV2Address,
 };
 
 export const UNISWAP_MULTICALL_ADDRESSES: AddressMap = {
@@ -133,6 +145,10 @@ export const UNISWAP_MULTICALL_ADDRESSES: AddressMap = {
   [ChainId.ZKSYNC]: CHAIN_TO_ADDRESSES_MAP[ChainId.ZKSYNC].multicallAddress,
   [ChainId.ABSTRACT_TESTNET]: CHAIN_TO_ADDRESSES_MAP[ChainId.ABSTRACT_TESTNET].multicallAddress,
   [ChainId.ZERO]: CHAIN_TO_ADDRESSES_MAP[ChainId.ZERO].multicallAddress,
+  [ChainId.WORLDCHAIN]:
+    CHAIN_TO_ADDRESSES_MAP[ChainId.WORLDCHAIN].multicallAddress,
+  [ChainId.ASTROCHAIN_SEPOLIA]:
+    CHAIN_TO_ADDRESSES_MAP[ChainId.ASTROCHAIN_SEPOLIA].multicallAddress,
   // TODO: Gnosis + Moonbeam contracts to be deployed
 };
 
@@ -145,7 +161,7 @@ export const SWAP_ROUTER_02_ADDRESSES = (chainId: number): string => {
 
 export const STATE_VIEW_ADDRESSES: AddressMap = {
   ...constructSameAddressMap('0x1F98415757620B543A52E61c46B32eB19261F984'),
-  [ChainId.SEPOLIA]: '0x6Bb7157fb50e3Ae4983Ccdc62Fb8173c03c6b0a7',
+  [ChainId.SEPOLIA]: CHAIN_TO_ADDRESSES_MAP[ChainId.SEPOLIA].v4StateView,
 };
 
 export const OVM_GASPRICE_ADDRESS =
@@ -298,6 +314,13 @@ export const WETH9: {
   [ChainId.ABSTRACT_TESTNET]: new Token(
     ChainId.ABSTRACT_TESTNET,
     '0x9EDCde0257F2386Ce177C3a7FCdd97787F0D841d',
+     18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [ChainId.WORLDCHAIN]: new Token(
+    ChainId.WORLDCHAIN,
+    '0x4200000000000000000000000000000000000006',
     18,
     'WETH',
     'Wrapped Ether'
@@ -305,6 +328,12 @@ export const WETH9: {
   [ChainId.ZERO]: new Token(
     ChainId.ZERO,
     '0xAc98B49576B1C892ba6BFae08fE1BB0d80Cf599c',
+     18,
+    'WETH',
+    'Wrapped Ether'),
+  [ChainId.ASTROCHAIN_SEPOLIA]: new Token(
+    ChainId.ASTROCHAIN_SEPOLIA,
+    '0x4200000000000000000000000000000000000006',
     18,
     'WETH',
     'Wrapped Ether'

@@ -1,8 +1,8 @@
 import { Protocol } from '@abstractswap/router-sdk';
-import { ChainId, Token } from '@abstractswap/sdk-core';
+import { ChainId, Currency, Token } from '@abstractswap/sdk-core';
 
 import { SubgraphPool } from '../routers/alpha-router/functions/get-candidate-pools';
-import { WRAPPED_NATIVE_CURRENCY } from '../util';
+import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from '../util';
 
 import { ICache } from './cache';
 import { ProviderConfig } from './provider';
@@ -25,6 +25,7 @@ import {
   USDB_BLAST,
   USDC_ABSTRACT_TESTNET,
   USDC_ARBITRUM,
+  USDC_ASTROCHAIN_SEPOLIA,
   USDC_AVAX,
   USDC_BASE,
   USDC_BNB,
@@ -34,6 +35,7 @@ import {
   USDC_OPTIMISM,
   USDC_POLYGON,
   USDC_ZERO,
+  USDC_WORLDCHAIN,
   USDC_ZKSYNC,
   USDCE_ZKSYNC,
   USDT_ARBITRUM,
@@ -44,18 +46,21 @@ import {
   WBTC_MAINNET,
   WBTC_MOONBEAM,
   WBTC_OPTIMISM,
+  WBTC_WORLDCHAIN,
   WETH_POLYGON,
+  WLD_WORLDCHAIN,
   WMATIC_POLYGON,
   WSTETH_MAINNET,
 } from './token-provider';
 import { V3SubgraphPool } from './v3/subgraph-provider';
 
 type ChainTokenList = {
-  readonly [chainId in ChainId]: Token[];
+  readonly [chainId in ChainId]: Currency[];
 };
 
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   [ChainId.MAINNET]: [
+    nativeOnChain(ChainId.MAINNET),
     WRAPPED_NATIVE_CURRENCY[ChainId.MAINNET]!,
     DAI_MAINNET,
     USDC_MAINNET,
@@ -64,9 +69,13 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     WSTETH_MAINNET,
   ],
   [ChainId.GOERLI]: [WRAPPED_NATIVE_CURRENCY[ChainId.GOERLI]!],
-  [ChainId.SEPOLIA]: [WRAPPED_NATIVE_CURRENCY[ChainId.SEPOLIA]!],
+  [ChainId.SEPOLIA]: [
+    nativeOnChain(ChainId.SEPOLIA),
+    WRAPPED_NATIVE_CURRENCY[ChainId.SEPOLIA]!,
+  ],
   //v2 not deployed on [arbitrum, polygon, celo, gnosis, moonbeam, bnb, avalanche] and their testnets
   [ChainId.OPTIMISM]: [
+    nativeOnChain(ChainId.OPTIMISM),
     WRAPPED_NATIVE_CURRENCY[ChainId.OPTIMISM]!,
     USDC_OPTIMISM,
     DAI_OPTIMISM,
@@ -75,6 +84,7 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     OP_OPTIMISM,
   ],
   [ChainId.ARBITRUM_ONE]: [
+    nativeOnChain(ChainId.ARBITRUM_ONE),
     WRAPPED_NATIVE_CURRENCY[ChainId.ARBITRUM_ONE]!,
     WBTC_ARBITRUM,
     DAI_ARBITRUM,
@@ -87,7 +97,12 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   [ChainId.ARBITRUM_SEPOLIA]: [],
   [ChainId.OPTIMISM_GOERLI]: [],
   [ChainId.OPTIMISM_SEPOLIA]: [],
-  [ChainId.POLYGON]: [USDC_POLYGON, WETH_POLYGON, WMATIC_POLYGON],
+  [ChainId.POLYGON]: [
+    nativeOnChain(ChainId.POLYGON),
+    USDC_POLYGON,
+    WETH_POLYGON,
+    WMATIC_POLYGON,
+  ],
   [ChainId.POLYGON_MUMBAI]: [],
   [ChainId.CELO]: [CELO, CUSD_CELO, CEUR_CELO, DAI_CELO],
   [ChainId.CELO_ALFAJORES]: [],
@@ -99,6 +114,7 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     WBTC_MOONBEAM,
   ],
   [ChainId.BNB]: [
+    nativeOnChain(ChainId.BNB),
     WRAPPED_NATIVE_CURRENCY[ChainId.BNB],
     BUSD_BNB,
     DAI_BNB,
@@ -113,11 +129,22 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     DAI_AVAX,
   ],
   [ChainId.BASE_GOERLI]: [],
-  [ChainId.BASE]: [WRAPPED_NATIVE_CURRENCY[ChainId.BASE], USDC_BASE],
-  [ChainId.ZORA]: [WRAPPED_NATIVE_CURRENCY[ChainId.ZORA]!],
+  [ChainId.BASE]: [
+    nativeOnChain(ChainId.BASE),
+    WRAPPED_NATIVE_CURRENCY[ChainId.BASE],
+    USDC_BASE,
+  ],
+  [ChainId.ZORA]: [
+    nativeOnChain(ChainId.ZORA),
+    WRAPPED_NATIVE_CURRENCY[ChainId.ZORA]!,
+  ],
   [ChainId.ZORA_SEPOLIA]: [WRAPPED_NATIVE_CURRENCY[ChainId.ZORA_SEPOLIA]!],
   [ChainId.ROOTSTOCK]: [WRAPPED_NATIVE_CURRENCY[ChainId.ROOTSTOCK]!],
-  [ChainId.BLAST]: [WRAPPED_NATIVE_CURRENCY[ChainId.BLAST]!, USDB_BLAST],
+  [ChainId.BLAST]: [
+    nativeOnChain(ChainId.BLAST),
+    WRAPPED_NATIVE_CURRENCY[ChainId.BLAST]!,
+    USDB_BLAST,
+  ],
   [ChainId.ZKSYNC]: [
     WRAPPED_NATIVE_CURRENCY[ChainId.ZKSYNC]!,
     USDCE_ZKSYNC,
@@ -128,6 +155,18 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     USDC_ABSTRACT_TESTNET,
   ],
   [ChainId.ZERO]: [WRAPPED_NATIVE_CURRENCY[ChainId.ZERO]!, USDC_ZERO],
+  [ChainId.WORLDCHAIN]: [
+    nativeOnChain(ChainId.WORLDCHAIN),
+    WRAPPED_NATIVE_CURRENCY[ChainId.WORLDCHAIN]!,
+    USDC_WORLDCHAIN,
+    WLD_WORLDCHAIN,
+    WBTC_WORLDCHAIN,
+  ],
+  [ChainId.ASTROCHAIN_SEPOLIA]: [
+    nativeOnChain(ChainId.ASTROCHAIN_SEPOLIA),
+    WRAPPED_NATIVE_CURRENCY[ChainId.ASTROCHAIN_SEPOLIA]!,
+    USDC_ASTROCHAIN_SEPOLIA,
+  ],
 };
 
 export interface IV3SubgraphProvider {

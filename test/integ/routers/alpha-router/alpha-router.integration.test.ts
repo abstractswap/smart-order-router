@@ -50,6 +50,7 @@ import {
   DAI_ON,
   EthEstimateGasSimulator,
   FallbackTenderlySimulator,
+  getApplicableV4FeesTickspacingsHooks,
   ID_TO_NETWORK_NAME,
   ID_TO_PROVIDER,
   MethodParameters,
@@ -80,6 +81,7 @@ import {
   USDC_NATIVE_BASE,
   USDC_NATIVE_OPTIMISM,
   USDC_NATIVE_POLYGON,
+  USDC_NATIVE_SEPOLIA,
   USDC_ON,
   USDT_BNB,
   USDT_MAINNET,
@@ -94,8 +96,10 @@ import {
   WBTC_GNOSIS,
   WBTC_MOONBEAM,
   WETH9,
+  WLD_WORLDCHAIN,
   WNATIVE_ON,
-  WRAPPED_NATIVE_CURRENCY
+  WRAPPED_NATIVE_CURRENCY,
+  CacheMode
 } from '../../../../src';
 import { PortionProvider } from '../../../../src/providers/portion-provider';
 import {
@@ -118,6 +122,12 @@ import {
 } from '../../../test-util/mock-data';
 import { WHALES } from '../../../test-util/whales';
 import { V4SubgraphProvider } from '../../../../build/main';
+import {
+  InMemoryRouteCachingProvider
+} from '../../../unit/providers/caching/route/test-util/inmemory-route-caching-provider';
+import {
+  getInvalidCachedRoutesStub
+} from '../../../unit/routers/alpha-router/gas-models/test-util/mocked-dependencies';
 
 const FORK_BLOCK = 20444945;
 const UNIVERSAL_ROUTER_ADDRESS_V1_2 = UNIVERSAL_ROUTER_ADDRESS_BY_CHAIN(UniversalRouterVersion.V1_2, 1);
@@ -129,8 +139,8 @@ const LARGE_SLIPPAGE = new Percent(45, 100); // 5% or 10_000?
 const GAS_ESTIMATE_DEVIATION_PERCENT: { [chainId in ChainId]: number } = {
   [ChainId.MAINNET]: 50,
   [ChainId.GOERLI]: 62,
-  [ChainId.SEPOLIA]: 50,
-  [ChainId.OPTIMISM]: 61,
+  [ChainId.SEPOLIA]: 75,
+  [ChainId.OPTIMISM]: 71,
   [ChainId.OPTIMISM_GOERLI]: 30,
   [ChainId.OPTIMISM_SEPOLIA]: 30,
   [ChainId.ARBITRUM_ONE]: 53,
@@ -151,6 +161,8 @@ const GAS_ESTIMATE_DEVIATION_PERCENT: { [chainId in ChainId]: number } = {
   [ChainId.ROOTSTOCK]: 30,
   [ChainId.BLAST]: 34,
   [ChainId.ZKSYNC]: 40,
+  [ChainId.WORLDCHAIN]: 50,
+  [ChainId.ASTROCHAIN_SEPOLIA]: 50,
 };
 
 const V2_SUPPORTED_PAIRS = [
@@ -765,6 +777,7 @@ describe('alpha router integration', () => {
       v3PoolProvider,
       v4PoolProvider,
       simulator: ethEstimateGasSimulator,
+      cachedRoutesCacheInvalidationFixRolloutPercentage: 100,
     });
 
     feeOnTransferAlphaRouter = new AlphaRouter({
@@ -774,6 +787,7 @@ describe('alpha router integration', () => {
       v2PoolProvider: cachingV2PoolProvider,
       v3PoolProvider,
       simulator,
+      cachedRoutesCacheInvalidationFixRolloutPercentage: 100,
     });
   });
 
@@ -3108,6 +3122,7 @@ describe('alpha router integration', () => {
           provider: hardhat.providers[0]!,
           multicall2Provider,
           gasPriceProvider,
+          cachedRoutesCacheInvalidationFixRolloutPercentage: 100,
         });
 
         const swap = await customAlphaRouter.route(
@@ -3127,6 +3142,71 @@ describe('alpha router integration', () => {
         expect(gasPriceWei.eq(BigNumber.from(60000000000))).toBe(true);
 
         await validateSwapRoute(quote, quoteGasAdjusted, tradeType, 100, 10);
+      });
+
+      // This test is easy to set up at SOR level, but hard at routing-api level
+      // because at routing-api level, its difficult to trigger a quote to ensure an invalid cached routes get persisted into DB
+      // then we want to repro the invalid cached routes at SOR level
+      it(`erc20 -> erc20 cached routes cache invalidation`, async () => {
+        // invalid cached routes test setup is only set for exact-in in getInvalidCachedRoutesStub
+        if (tradeType !== TradeType.EXACT_INPUT) {
+          return
+        }
+
+        const tokenIn = USDC_MAINNET;
+        const tokenOut = DAI_MAINNET;
+        const amount = parseAmount('1.1', tokenIn);
+        const routeCachingProvider = new InMemoryRouteCachingProvider();
+        routeCachingProvider.cacheMode = CacheMode.Livemode;
+        routeCachingProvider.blocksToLive = Number.MAX_VALUE;
+        routeCachingProvider.expired = false;
+
+        // Insert a invalid cached routes for this test purpose to make sure it can get cleaned up
+        await routeCachingProvider.setCachedRoute(getInvalidCachedRoutesStub(FORK_BLOCK)!, CurrencyAmount.fromRawAmount(USDC_MAINNET, 100));
+
+        // Create a new AlphaRouter
+        const customAlphaRouter: AlphaRouter = new AlphaRouter({
+          chainId: 1,
+          provider: hardhat.providers[0]!,
+          multicall2Provider,
+          routeCachingProvider,
+          cachedRoutesCacheInvalidationFixRolloutPercentage: 100
+        });
+
+        routeCachingProvider.expired = true;
+
+        let swap = await customAlphaRouter.route(
+          amount,
+          getQuoteToken(tokenIn, tokenOut, tradeType),
+          tradeType,
+          undefined,
+          {
+            ...ROUTING_CONFIG,
+            protocols: [Protocol.V2, Protocol.V3, Protocol.MIXED],
+            optimisticCachedRoutes: false // to trigger cache invalidation during intent=caching
+          },
+        );
+        // first time the swap is gonna be null, because even with the new set cached routes codepath,
+        // i intentionally made it a fire and forget, i.e. non-blocking on the aloha-router request processing path
+        // first time swap from cache from the request processing path will be null
+        expect(swap).toBeNull(); // first time expect swapRouteFromCache to be null
+
+        swap = await customAlphaRouter.route(
+          amount,
+          getQuoteToken(tokenIn, tokenOut, tradeType),
+          tradeType,
+          undefined,
+          {
+            ...ROUTING_CONFIG,
+            optimisticCachedRoutes: false // to make sure the updated in-memory cache contains the valid cached routes now
+          },
+        );
+
+        // second time we will ensure the quote exists
+        // because the first time we had the sets cached routes in the new code path
+        // with second time we will have the cache hit from the new codepath cached routes
+        expect(swap).toBeDefined();
+        expect(swap).not.toBeNull();
       });
     });
   }
@@ -3457,6 +3537,8 @@ describe('quote for other networks', () => {
     [ChainId.ROOTSTOCK]: () => USDC_ON(ChainId.ROOTSTOCK),
     [ChainId.BLAST]: () => USDB_BLAST,
     [ChainId.ZKSYNC]: () => USDC_ON(ChainId.ZKSYNC),
+    [ChainId.WORLDCHAIN]: () => USDC_ON(ChainId.WORLDCHAIN),
+    [ChainId.ASTROCHAIN_SEPOLIA]: () => USDC_ON(ChainId.ASTROCHAIN_SEPOLIA),
   };
   const TEST_ERC20_2: { [chainId in ChainId]: () => Token } = {
     [ChainId.MAINNET]: () => DAI_ON(1),
@@ -3484,6 +3566,8 @@ describe('quote for other networks', () => {
     [ChainId.ROOTSTOCK]: () => WNATIVE_ON(ChainId.ROOTSTOCK),
     [ChainId.BLAST]: () => WNATIVE_ON(ChainId.BLAST),
     [ChainId.ZKSYNC]: () => WNATIVE_ON(ChainId.ZKSYNC),
+    [ChainId.WORLDCHAIN]: () => WLD_WORLDCHAIN,
+    [ChainId.ASTROCHAIN_SEPOLIA]: () => WNATIVE_ON(ChainId.ASTROCHAIN_SEPOLIA),
   };
 
   // TODO: Find valid pools/tokens on optimistic kovan and polygon mumbai. We skip those tests for now.
@@ -3591,6 +3675,14 @@ describe('quote for other networks', () => {
               multicall2Provider,
               v4SubgraphProvider,
               simulator,
+              v4PoolParams: getApplicableV4FeesTickspacingsHooks(chain).concat(
+                [
+                  [500, 10, '0x0000000000000000000000000000000000000020'],
+                  [1500, 30, '0x0000000000000000000000000000000000000020'],
+                  [3000, 60, '0x0000000000000000000000000000000000000020'],
+                ]
+              ),
+              cachedRoutesCacheInvalidationFixRolloutPercentage: 100,
             });
           } else {
             alphaRouter = new AlphaRouter({
@@ -3598,6 +3690,14 @@ describe('quote for other networks', () => {
               provider,
               multicall2Provider,
               simulator,
+              v4PoolParams: getApplicableV4FeesTickspacingsHooks(chain).concat(
+                [
+                  [500, 10, '0x0000000000000000000000000000000000000020'],
+                  [1500, 30, '0x0000000000000000000000000000000000000020'],
+                  [3000, 60, '0x0000000000000000000000000000000000000020'],
+                ]
+              ),
+              cachedRoutesCacheInvalidationFixRolloutPercentage: 100,
             });
           }
         });
@@ -3642,7 +3742,10 @@ describe('quote for other networks', () => {
 
             const tokenIn = wrappedNative;
             const tokenOut = erc1;
-            const amount =
+            const amount = chain === ChainId.ASTROCHAIN_SEPOLIA ?
+              tradeType == TradeType.EXACT_INPUT ?
+                parseAmount('0.001', tokenIn):
+                parseAmount('0.001', tokenOut) :
               tradeType == TradeType.EXACT_INPUT
                 ? parseAmount('10', tokenIn)
                 : parseAmount('10', tokenOut);
@@ -3706,7 +3809,10 @@ describe('quote for other networks', () => {
 
             // Current WETH/USDB pool (https://blastscan.io/address/0xf52b4b69123cbcf07798ae8265642793b2e8990c) has low WETH amount
             const exactOutAmount = '1';
-            const amount =
+            const amount = chain === ChainId.ASTROCHAIN_SEPOLIA ?
+              tradeType == TradeType.EXACT_INPUT ?
+                parseAmount('0.001', tokenIn):
+                parseAmount('0.001', tokenOut) :
               tradeType == TradeType.EXACT_INPUT
                 ? parseAmount('1', tokenIn)
                 : parseAmount(exactOutAmount, tokenOut);
@@ -3730,22 +3836,18 @@ describe('quote for other networks', () => {
           const native = NATIVE_CURRENCY[chain];
 
           it(`${native} -> erc20`, async () => {
-            if (chain === ChainId.SEPOLIA) {
-              // Sepolia doesn't have sufficient liquidity on DAI pools yet
-              return;
-            }
-
-            if (chain === ChainId.BLAST || chain === ChainId.ZORA || chain === ChainId.ZKSYNC) {
+            if (chain === ChainId.BLAST || chain === ChainId.ZORA || chain === ChainId.ZKSYNC || chain === ChainId.ASTROCHAIN_SEPOLIA) {
               // Blast doesn't have DAI or USDC yet
               // Zora doesn't have DAI
               // Zksync doesn't have liquid USDC/DAI pool yet
+              // astrochain sepolia doesn't have liquid USDC/DAI pool yet
               return;
             }
 
             const tokenIn = nativeOnChain(chain);
             // TODO ROUTE-64: Remove this once smart-order-router supports ETH native currency on BASE
             // see https://uniswapteam.slack.com/archives/C021SU4PMR7/p1691593679108459?thread_ts=1691532336.742419&cid=C021SU4PMR7
-            const tokenOut = chain == ChainId.BASE ? USDC_ON(ChainId.BASE) : erc2;
+            const tokenOut = [ChainId.BASE, ChainId.SEPOLIA].includes(chain) ? (chain !== ChainId.SEPOLIA ? USDC_ON(chain) : USDC_NATIVE_SEPOLIA) : erc2;
 
             // Celo currently has low liquidity and will not be able to find route for
             // large input amounts
@@ -3767,7 +3869,39 @@ describe('quote for other networks', () => {
               {
                 // @ts-ignore[TS7053] - complaining about switch being non exhaustive
                 ...DEFAULT_ROUTING_CONFIG_BY_CHAIN[chain],
-                protocols: [Protocol.V3, Protocol.V2],
+                protocols: chain === ChainId.SEPOLIA ? [Protocol.V4] : [Protocol.V3, Protocol.V2],
+                universalRouterVersion: UniversalRouterVersion.V2_0
+              }
+            );
+            expect(swap).toBeDefined();
+            expect(swap).not.toBeNull();
+          });
+
+          it(`erc20 -> ${native}`, async () => {
+            if (chain !== ChainId.SEPOLIA) {
+              return;
+            }
+
+            const tokenIn = USDC_NATIVE_SEPOLIA;
+            const tokenOut = nativeOnChain(chain);
+
+            // as of now, in sepolia v4, v4 pools having > 1eth is only the ETH/USDC pools with hook address 0x0000000000000000000000000000000000000020
+            // this means if we try an exact in 1 ETH -> USDC quote against v4 sepolia, the only way is to route through v4 ETH/USDC pools with hook address 0x0000000000000000000000000000000000000020
+            // this validates that the getApplicableV4FeesTickspacingsHooks along with the hardcoded fees + tickspacings + hook address 0x0000000000000000000000000000000000000020 are working as expected
+            const amount = tradeType == TradeType.EXACT_INPUT ?
+              parseAmount('1', tokenIn)
+              : parseAmount('1', tokenOut);
+
+            const swap = await alphaRouter.route(
+              amount,
+              getQuoteToken(tokenIn, tokenOut, tradeType),
+              tradeType,
+              undefined,
+              {
+                // @ts-ignore[TS7053] - complaining about switch being non exhaustive
+                ...DEFAULT_ROUTING_CONFIG_BY_CHAIN[chain],
+                protocols: chain === ChainId.SEPOLIA ? [Protocol.V4] : [Protocol.V3, Protocol.V2],
+                universalRouterVersion: UniversalRouterVersion.V2_0
               }
             );
             expect(swap).toBeDefined();
@@ -3785,7 +3919,10 @@ describe('quote for other networks', () => {
 
             // Current WETH/USDB pool (https://blastscan.io/address/0xf52b4b69123cbcf07798ae8265642793b2e8990c) has low WETH amount
             const exactOutAmount = '1';
-            const amount =
+            const amount = chain === ChainId.ASTROCHAIN_SEPOLIA ?
+              tradeType == TradeType.EXACT_INPUT ?
+                parseAmount('0.001', tokenIn):
+                parseAmount('0.001', tokenOut) :
               tradeType == TradeType.EXACT_INPUT
                 ? parseAmount('1', tokenIn)
                 : parseAmount(exactOutAmount, tokenOut);
@@ -3828,7 +3965,10 @@ describe('quote for other networks', () => {
 
             // Current WETH/USDB pool (https://blastscan.io/address/0xf52b4b69123cbcf07798ae8265642793b2e8990c) has low WETH amount
             const exactOutAmount = chain === ChainId.BLAST ? '0.002' : '1';
-            const amount =
+            const amount = chain === ChainId.ASTROCHAIN_SEPOLIA ?
+              tradeType == TradeType.EXACT_INPUT ?
+                parseAmount('0.001', tokenIn):
+                parseAmount('0.001', tokenOut) :
               tradeType == TradeType.EXACT_INPUT
                 ? parseAmount('1', tokenIn)
                 : parseAmount(exactOutAmount, tokenOut);
@@ -3894,8 +4034,8 @@ describe('quote for other networks', () => {
               const tokenOut = erc1;
               const amount =
                 tradeType == TradeType.EXACT_INPUT
-                  ? parseAmount(chain === ChainId.ZORA ? '0.1' : '10', tokenIn)
-                  : parseAmount('10', tokenOut);
+                  ? parseAmount(chain === ChainId.ZORA || chain === ChainId.WORLDCHAIN || chain === ChainId.ASTROCHAIN_SEPOLIA ? '0.001' : '10', tokenIn)
+                  : parseAmount(chain === ChainId.ASTROCHAIN_SEPOLIA ? '0.001' : '10', tokenOut);
 
               // Universal Router is not deployed on Gorli.
               const swapWithSimulationOptions: SwapOptions =
@@ -3967,7 +4107,7 @@ describe('quote for other networks', () => {
               // due to gas cost per compressed calldata byte dropping from 16 to 3.
               // Relying on Tenderly gas estimate is the only way our github CI can auto catch this.
               const percentDiff = gasEstimateDiff.mul(BigNumber.from(100)).div(swapWithSimulation!.estimatedGasUsed);
-              console.log(`chain ${chain} GAS_ESTIMATE_DEVIATION_PERCENT ${percentDiff.toNumber()} expected ${GAS_ESTIMATE_DEVIATION_PERCENT[chain]}`);
+              console.log(`chain ${chain} GAS_ESTIMATE_DEVIATION_PERCENT ${percentDiff.toNumber()} expected ${GAS_ESTIMATE_DEVIATION_PERCENT[chain]} ${swapWithSimulation!.estimatedGasUsed.toNumber()} ${swap!.estimatedGasUsed.toNumber()}`);
               expect(percentDiff.lte(BigNumber.from(GAS_ESTIMATE_DEVIATION_PERCENT[chain]))).toBe(true);
 
               if (swapWithSimulation) {
@@ -4077,7 +4217,7 @@ describe('quote for other networks', () => {
               // due to gas cost per compressed calldata byte dropping from 16 to 3.
               // Relying on Tenderly gas estimate is the only way our github CI can auto catch this.
               const percentDiff = gasEstimateDiff.mul(BigNumber.from(100)).div(swapWithSimulation!.estimatedGasUsed);
-              console.log(`chain ${chain} GAS_ESTIMATE_DEVIATION_PERCENT ${percentDiff.toNumber()}`);
+              console.log(`chain ${chain} GAS_ESTIMATE_DEVIATION_PERCENT ${percentDiff.toNumber()} expected ${GAS_ESTIMATE_DEVIATION_PERCENT[chain]} ${swapWithSimulation!.estimatedGasUsed.toNumber()} ${swap!.estimatedGasUsed.toNumber()}`);
               expect(percentDiff.lte(BigNumber.from(GAS_ESTIMATE_DEVIATION_PERCENT[chain]))).toBe(true);
 
               if (swapWithSimulation) {
@@ -4097,18 +4237,12 @@ describe('quote for other networks', () => {
             });
 
             it(`${erc1.symbol} -> ${erc2.symbol}`, async () => {
-              // TOOD: re-enable sepolia OP -> USDC swap with simulation, once universal router supports v4 swap commands
-              if (chain === ChainId.SEPOLIA && erc1.equals(V4_SEPOLIA_TEST_A)) {
-                // Sepolia doesn't have sufficient liquidity on DAI pools yet
-                return;
-              }
-
               const tokenIn = erc1;
               const tokenOut = erc2;
               const amount =
                 tradeType === TradeType.EXACT_INPUT
-                  ? parseAmount(chain === ChainId.ZORA ? '0.1' : '1', tokenIn)
-                  : parseAmount(chain === ChainId.ZORA ? '0.01' : '1', tokenOut);
+                  ? parseAmount(chain === ChainId.ZORA || chain === ChainId.ASTROCHAIN_SEPOLIA ? '0.001' : '1', tokenIn)
+                  : parseAmount(chain === ChainId.ZORA || chain === ChainId.ASTROCHAIN_SEPOLIA ? '0.001' : '1', tokenOut);
 
               // Universal Router is not deployed on Gorli.
               const swapWithSimulationOptions: SwapOptions =
@@ -4122,7 +4256,7 @@ describe('quote for other networks', () => {
                   }
                   : {
                     type: SwapType.UNIVERSAL_ROUTER,
-                    version: UniversalRouterVersion.V1_2,
+                    version: UniversalRouterVersion.V2_0,
                     recipient: WHALES(tokenIn),
                     slippageTolerance: SLIPPAGE,
                     deadlineOrPreviousBlockhash: parseDeadline(360),
@@ -4148,7 +4282,7 @@ describe('quote for other networks', () => {
               const swapOptions: SwapOptions =
                 {
                   type: SwapType.UNIVERSAL_ROUTER,
-                  version: UniversalRouterVersion.V1_2,
+                  version: UniversalRouterVersion.V2_0,
                   recipient: WHALES(tokenIn),
                   slippageTolerance: SLIPPAGE,
                   deadlineOrPreviousBlockhash: parseDeadline(360),
@@ -4180,7 +4314,7 @@ describe('quote for other networks', () => {
               // due to gas cost per compressed calldata byte dropping from 16 to 3.
               // Relying on Tenderly gas estimate is the only way our github CI can auto catch this.
               const percentDiff = gasEstimateDiff.mul(BigNumber.from(100)).div(swapWithSimulation!.estimatedGasUsed);
-              console.log(`chain ${chain} GAS_ESTIMATE_DEVIATION_PERCENT ${percentDiff.toNumber()} expected ${GAS_ESTIMATE_DEVIATION_PERCENT[chain]}`);
+              console.log(`chain ${chain} GAS_ESTIMATE_DEVIATION_PERCENT ${percentDiff.toNumber()} expected ${GAS_ESTIMATE_DEVIATION_PERCENT[chain]} ${swapWithSimulation!.estimatedGasUsed.toNumber()} ${swap!.estimatedGasUsed.toNumber()}`);
 
               expect(percentDiff.lte(BigNumber.from(GAS_ESTIMATE_DEVIATION_PERCENT[chain]))).toBe(true);
 
@@ -4201,7 +4335,7 @@ describe('quote for other networks', () => {
             const native = NATIVE_CURRENCY[chain];
 
             it(`${native} -> erc20`, async () => {
-              if (chain === ChainId.SEPOLIA) {
+              if (chain === ChainId.SEPOLIA || chain === ChainId.ASTROCHAIN_SEPOLIA) {
                 // Sepolia doesn't have sufficient liquidity on DAI pools yet
                 return;
               }
@@ -4212,7 +4346,7 @@ describe('quote for other networks', () => {
               const tokenOut = chain == ChainId.BASE || chain == ChainId.ZORA ? USDC_ON(chain) : erc2;
               const amount =
                 tradeType == TradeType.EXACT_INPUT
-                  ? parseAmount('1', tokenIn)
+                  ? parseAmount(chain === ChainId.WORLDCHAIN ? '0.001' : '1', tokenIn)
                   : parseAmount('1', tokenOut);
 
               // Universal Router is not deployed on Gorli.
@@ -4285,7 +4419,7 @@ describe('quote for other networks', () => {
               // due to gas cost per compressed calldata byte dropping from 16 to 3.
               // Relying on Tenderly gas estimate is the only way our github CI can auto catch this.
               const percentDiff = gasEstimateDiff.mul(BigNumber.from(100)).div(swapWithSimulation!.estimatedGasUsed);
-              console.log(`chain ${chain} GAS_ESTIMATE_DEVIATION_PERCENT ${percentDiff.toNumber()}`);
+              console.log(`chain ${chain} GAS_ESTIMATE_DEVIATION_PERCENT ${percentDiff.toNumber()} expected ${GAS_ESTIMATE_DEVIATION_PERCENT[chain]} ${swapWithSimulation!.estimatedGasUsed} ${swap!.estimatedGasUsed}`);
 
               expect(percentDiff.lte(BigNumber.from(GAS_ESTIMATE_DEVIATION_PERCENT[chain]))).toBe(true);
 

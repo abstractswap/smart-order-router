@@ -1,8 +1,9 @@
 import { Protocol } from '@abstractswap/router-sdk';
 import { ChainId, Currency, Token, TradeType } from '@abstractswap/sdk-core';
-import { ADDRESS_ZERO, FeeAmount } from '@abstractswap/v3-sdk';
+import { FeeAmount } from '@abstractswap/v3-sdk';
 import _ from 'lodash';
 
+import { isNativeCurrency } from '@abstractswap//universal-router-sdk';
 import {
   DAI_OPTIMISM_SEPOLIA,
   ITokenListProvider,
@@ -81,6 +82,8 @@ import {
   getAddress,
   getAddressLowerCase,
   getApplicableV3FeeAmounts,
+  getApplicableV4FeesTickspacingsHooks,
+  nativeOnChain,
   unparseFeeAmount,
   WRAPPED_NATIVE_CURRENCY,
 } from '../../../util';
@@ -133,6 +136,7 @@ export type V4GetCandidatePoolsParams = {
   poolProvider: IV4PoolProvider;
   blockedTokenListProvider?: ITokenListProvider;
   chainId: ChainId;
+  v4PoolParams?: Array<[number, number, string]>;
 };
 
 export type V3GetCandidatePoolsParams = {
@@ -233,6 +237,8 @@ const baseTokensByChain: { [chainId in ChainId]?: Token[] } = {
   [ChainId.ZKSYNC]: [WRAPPED_NATIVE_CURRENCY[ChainId.ZKSYNC]!],
   [ChainId.ABSTRACT_TESTNET]: [WRAPPED_NATIVE_CURRENCY[ChainId.ABSTRACT_TESTNET]!],
   [ChainId.ZERO]: [WRAPPED_NATIVE_CURRENCY[ChainId.ZERO]!],
+  [ChainId.WORLDCHAIN]: [WRAPPED_NATIVE_CURRENCY[ChainId.WORLDCHAIN]!],
+  [ChainId.ASTROCHAIN_SEPOLIA]: [WRAPPED_NATIVE_CURRENCY[ChainId.WORLDCHAIN]!],
 };
 
 class SubcategorySelectionPools<SubgraphPool> {
@@ -412,6 +418,7 @@ export async function getV4CandidatePools({
   poolProvider,
   blockedTokenListProvider,
   chainId,
+  v4PoolParams = getApplicableV4FeesTickspacingsHooks(chainId),
 }: V4GetCandidatePoolsParams): Promise<V4CandidatePools> {
   const {
     blockNumber,
@@ -547,12 +554,7 @@ export async function getV4CandidatePools({
     // Optimistically add them into the query regardless. Invalid pools ones will be dropped anyway
     // when we query the pool on-chain. Ensures that new pools for new pairs can be swapped on immediately.
     top2DirectSwapPool = _.map(
-      [
-        [FeeAmount.HIGH, 200, ADDRESS_ZERO],
-        [FeeAmount.MEDIUM, 60, ADDRESS_ZERO],
-        [FeeAmount.LOW, 10, ADDRESS_ZERO],
-        [FeeAmount.LOWEST, 1, ADDRESS_ZERO],
-      ] as Array<[number, number, string]>,
+      v4PoolParams as Array<[number, number, string]>,
       (poolParams) => {
         const [fee, tickSpacing, hooks] = poolParams;
 
@@ -565,7 +567,7 @@ export async function getV4CandidatePools({
         );
         return {
           id: poolId,
-          feeTier: unparseFeeAmount(fee),
+          feeTier: fee.toString(),
           tickSpacing: tickSpacing.toString(),
           hooks: hooks,
           liquidity: '10000',
@@ -766,10 +768,15 @@ export async function getV4CandidatePools({
 
   const tokenPairsRaw = _.map<
     V4SubgraphPool,
-    [Token, Token, number, number, string] | undefined
+    [Currency, Currency, number, number, string] | undefined
   >(subgraphPools, (subgraphPool) => {
-    const tokenA = tokenAccessor.getTokenByAddress(subgraphPool.token0.id);
-    const tokenB = tokenAccessor.getTokenByAddress(subgraphPool.token1.id);
+    // native currency is not erc20 token, therefore there's no way to retrieve native currency metadata as the erc20 token.
+    const tokenA = isNativeCurrency(subgraphPool.token0.id)
+      ? nativeOnChain(chainId)
+      : tokenAccessor.getTokenByAddress(subgraphPool.token0.id);
+    const tokenB = isNativeCurrency(subgraphPool.token1.id)
+      ? nativeOnChain(chainId)
+      : tokenAccessor.getTokenByAddress(subgraphPool.token1.id);
     let fee: FeeAmount;
     try {
       fee = Number(subgraphPool.feeTier);
