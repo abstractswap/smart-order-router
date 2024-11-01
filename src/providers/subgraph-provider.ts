@@ -170,7 +170,7 @@ export abstract class SubgraphProvider<
           if (
             this.rollback &&
             blockNumber &&
-            _.includes(err.message, 'indexed up to')
+            _.includes((err as Error).message, 'indexed up to')
           ) {
             metric.putMetric(
               `${this.protocol}SubgraphProvider.chain_${this.chainId}.getPools.indexError`,
