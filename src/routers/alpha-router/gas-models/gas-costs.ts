@@ -1,7 +1,7 @@
-import { BigNumber } from '@ethersproject/bignumber';
-import { ChainId, Currency } from '@abstractswap/sdk-core';
-
 import { Protocol } from '@abstractswap/router-sdk';
+import { ChainId, Currency } from '@abstractswap/sdk-core';
+import { BigNumber } from '@ethersproject/bignumber';
+
 import { AAVE_MAINNET, LIDO_MAINNET } from '../../../providers';
 import { V3Route, V4Route } from '../../router';
 
@@ -28,12 +28,9 @@ export const BASE_SWAP_COST = (id: ChainId): BigNumber => {
     case ChainId.ZKSYNC:
     case ChainId.ABSTRACT_TESTNET:
     case ChainId.ZERO:
-<<<<<<< HEAD
     case ChainId.WORLDCHAIN:
     case ChainId.ASTROCHAIN_SEPOLIA:
-=======
     case ChainId.BOB:
->>>>>>> 0f566461813eabb474bfd564d7f01659b3b38ebc
       return BigNumber.from(2000);
     case ChainId.ARBITRUM_ONE:
     case ChainId.ARBITRUM_GOERLI:
@@ -74,12 +71,9 @@ export const COST_PER_INIT_TICK = (id: ChainId): BigNumber => {
     case ChainId.ZKSYNC:
     case ChainId.ABSTRACT_TESTNET:
     case ChainId.ZERO:
-<<<<<<< HEAD
     case ChainId.WORLDCHAIN:
     case ChainId.ASTROCHAIN_SEPOLIA:
-=======
     case ChainId.BOB:
->>>>>>> 0f566461813eabb474bfd564d7f01659b3b38ebc
       return BigNumber.from(31000);
     case ChainId.ARBITRUM_ONE:
     case ChainId.ARBITRUM_GOERLI:

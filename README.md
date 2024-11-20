@@ -162,7 +162,6 @@ Total ticks crossed: 7
 ./bin/cli quote --tokenIn 0x7F5c764cBc14f9669B88837ca1490cCa17c31607 --tokenOut 0x4200000000000000000000000000000000000042 --amount 1 --exactIn --minSplits 1 --protocols v2 --router alpha --chainId 10
 ```
 
-
 ## Optimism-Goerli
 
 ```
@@ -235,29 +234,32 @@ Total ticks crossed: 7
 ./bin/cli quote --tokenIn 0x5aea5775959fbc2557cc8789bc1bf90a239d9a91 --tokenOut 0x1d17cbcf0d6d143135ae902365d2e5e2a16538d4 --amount 10 --exactIn --minSplits 1 --protocols v3 --router alpha --chainId 324
 ```
 
-<<<<<<< HEAD
 ## Abstract testnet
 
 ```
 ./bin/cli quote --tokenIn 0xe4C7fBB0a626ed208021ccabA6Be1566905E2dFc --tokenOut 0x9EDCde0257F2386Ce177C3a7FCdd97787F0D841d --amount 10 --exactIn --minSplits 1 --protocols v2,v3,mixed --chainId 11124
-=======
 ## WorldChain Mainnet
 
 ```
+
 ./bin/cli quote --tokenIn 0x4200000000000000000000000000000000000006 --tokenOut 0x79A02482A880bCE3F13e09Da970dC34db4CD24d1 --amount 0.1 --exactIn --minSplits 1 --protocols v3 --router alpha --chainId 480
+
 ```
 
 ## AstroChain Sepolia
 
 ```
+
 ./bin/cli quote --tokenIn 0x4200000000000000000000000000000000000006 --tokenOut 0x31d0220469e10c4E71834a79b1f276d740d3768F --amount 0.1 --exactIn --minSplits 1 --protocols v3 --router alpha --chainId 1301
->>>>>>> bee554319c6dcaf8d93dfadd5aee61389a1794c0
+
 ```
 
 ## Zero Mainnet
 
 ```
+
 ./bin/cli quote --tokenIn 0x6a6394F47DD0BAF794808F2749C09bd4Ee874E70 --tokenOut ETH --amount 10 --exactIn --minSplits 1 --protocols v2,v3,mixed --chainId 543210
+
 ```
 
 ## Adding a new Chain
@@ -295,3 +297,4 @@ This total amount of gas each `eth_call` can consume is equal to the `multicallC
 If you are running your own node, we recommend you configure start your node with a higher gas limit per call. For example, on Geth you can use the command line argument `--rpc.gascap 150000000` to raise the limit to 150m, which is enough to run the default configuration of this package.
 
 If you are using Hardhat mainnet forking, you should add `blockGasLimit: 150_000_000` to your Hardhat config to use the default package configuration.
+```

@@ -239,12 +239,9 @@ const baseTokensByChain: { [chainId in ChainId]?: Token[] } = {
     WRAPPED_NATIVE_CURRENCY[ChainId.ABSTRACT_TESTNET]!,
   ],
   [ChainId.ZERO]: [WRAPPED_NATIVE_CURRENCY[ChainId.ZERO]!],
-<<<<<<< HEAD
   [ChainId.WORLDCHAIN]: [WRAPPED_NATIVE_CURRENCY[ChainId.WORLDCHAIN]!],
   [ChainId.ASTROCHAIN_SEPOLIA]: [WRAPPED_NATIVE_CURRENCY[ChainId.WORLDCHAIN]!],
-=======
   [ChainId.BOB]: [WRAPPED_NATIVE_CURRENCY[ChainId.BOB]!],
->>>>>>> 0f566461813eabb474bfd564d7f01659b3b38ebc
 };
 
 class SubcategorySelectionPools<SubgraphPool> {
