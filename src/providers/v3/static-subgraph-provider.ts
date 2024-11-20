@@ -32,7 +32,6 @@ import {
   ETH_BNB,
   OP_OPTIMISM,
   USDB_BLAST,
-  USDCE_ZKSYNC,
   USDC_ABSTRACT_TESTNET,
   USDC_ARBITRUM,
   USDC_ARBITRUM_GOERLI,
@@ -40,6 +39,7 @@ import {
   USDC_AVAX,
   USDC_BASE,
   USDC_BNB,
+  USDC_BOB,
   USDC_ETHEREUM_GNOSIS,
   USDC_GOERLI,
   USDC_MAINNET,
@@ -48,9 +48,10 @@ import {
   USDC_OPTIMISM_GOERLI,
   USDC_POLYGON,
   USDC_SEPOLIA,
-  USDC_ZERO,
   USDC_WORLDCHAIN,
+  USDC_ZERO,
   USDC_ZKSYNC,
+  USDCE_ZKSYNC,
   USDT_ARBITRUM,
   USDT_BNB,
   USDT_GOERLI,
@@ -185,10 +186,7 @@ const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     WRAPPED_NATIVE_CURRENCY[ChainId.ABSTRACT_TESTNET]!,
     USDC_ABSTRACT_TESTNET,
   ],
-  [ChainId.ZERO]: [
-    WRAPPED_NATIVE_CURRENCY[ChainId.ZERO]!,
-    USDC_ZERO,
-  ],
+  [ChainId.ZERO]: [WRAPPED_NATIVE_CURRENCY[ChainId.ZERO]!, USDC_ZERO],
   [ChainId.WORLDCHAIN]: [
     WRAPPED_NATIVE_CURRENCY[ChainId.WORLDCHAIN]!,
     USDC_WORLDCHAIN,
@@ -199,6 +197,7 @@ const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     WRAPPED_NATIVE_CURRENCY[ChainId.ASTROCHAIN_SEPOLIA]!,
     USDC_ASTROCHAIN_SEPOLIA,
   ],
+  [ChainId.BOB]: [WRAPPED_NATIVE_CURRENCY[ChainId.BOB]!, USDC_BOB],
 };
 
 /**
@@ -216,7 +215,7 @@ export class StaticV3SubgraphProvider implements IV3SubgraphProvider {
   constructor(
     private chainId: ChainId,
     private poolProvider: IV3PoolProvider
-  ) { }
+  ) {}
 
   public async getPools(
     tokenIn?: Token,

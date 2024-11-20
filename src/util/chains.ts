@@ -30,6 +30,7 @@ export const SUPPORTED_CHAINS: ChainId[] = [
   ChainId.ZERO,
   ChainId.WORLDCHAIN,
   ChainId.ASTROCHAIN_SEPOLIA,
+  ChainId.BOB,
   // Gnosis and Moonbeam don't yet have contracts deployed yet
 ];
 
@@ -43,8 +44,7 @@ export const V2_SUPPORTED = [
   ChainId.BNB,
   ChainId.AVALANCHE,
   ChainId.ABSTRACT_TESTNET,
-  // TODO: add ZERO once router is deployed
-  //ChainId.ZERO
+  ChainId.ZERO,
 ];
 
 export const V4_SUPPORTED = [ChainId.SEPOLIA];
@@ -133,6 +133,8 @@ export const ID_TO_CHAIN_ID = (id: number): ChainId => {
       return ChainId.WORLDCHAIN;
     case 1301:
       return ChainId.ASTROCHAIN_SEPOLIA;
+    case 60808:
+      return ChainId.BOB;
     default:
       throw new Error(`Unknown chain id: ${id}`);
   }
@@ -165,6 +167,7 @@ export enum ChainName {
   ZERO = 'zero',
   WORLDCHAIN = 'worldchain-mainnet',
   ASTROCHAIN_SEPOLIA = 'astrochain-sepolia',
+  BOB = 'bob',
 }
 
 export enum NativeCurrencyName {
@@ -259,7 +262,8 @@ export const NATIVE_NAMES_BY_ID: { [chainId: number]: string[] } = {
     'ETHER',
     '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
   ],
-  [ChainId.ABSTRACT_TESTNET]: [ 'ETH',
+  [ChainId.ABSTRACT_TESTNET]: [
+    'ETH',
     'ETHER',
     '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
   ],
@@ -268,7 +272,7 @@ export const NATIVE_NAMES_BY_ID: { [chainId: number]: string[] } = {
     'ETHER',
     '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
   ],
-  [ChainId.ZERO]:[
+  [ChainId.ZERO]: [
     'ETH',
     'ETHER',
     '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
@@ -278,6 +282,7 @@ export const NATIVE_NAMES_BY_ID: { [chainId: number]: string[] } = {
     'ETHER',
     '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
   ],
+  [ChainId.BOB]: ['ETH', 'ETHER', '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'],
 };
 
 export const NATIVE_CURRENCY: { [chainId: number]: NativeCurrencyName } = {
@@ -306,6 +311,7 @@ export const NATIVE_CURRENCY: { [chainId: number]: NativeCurrencyName } = {
   [ChainId.ZERO]: NativeCurrencyName.ETHER,
   [ChainId.WORLDCHAIN]: NativeCurrencyName.ETHER,
   [ChainId.ASTROCHAIN_SEPOLIA]: NativeCurrencyName.ETHER,
+  [ChainId.BOB]: NativeCurrencyName.ETHER,
 };
 
 export const ID_TO_NETWORK_NAME = (id: number): ChainName => {
@@ -362,6 +368,8 @@ export const ID_TO_NETWORK_NAME = (id: number): ChainName => {
       return ChainName.WORLDCHAIN;
     case 1301:
       return ChainName.ASTROCHAIN_SEPOLIA;
+    case 60808:
+      return ChainName.BOB;
     default:
       throw new Error(`Unknown chain id: ${id}`);
   }
@@ -419,6 +427,8 @@ export const ID_TO_PROVIDER = (id: ChainId): string => {
       return process.env.JSON_RPC_PROVIDER_WORLDCHAIN!;
     case ChainId.ASTROCHAIN_SEPOLIA:
       return process.env.JSON_RPC_PROVIDER_ASTROCHAIN_SEPOLIA!;
+    case ChainId.BOB:
+      return process.env.JSON_RPC_PROVIDER_BOB!;
     default:
       throw new Error(`Chain id: ${id} not supported`);
   }
@@ -597,7 +607,8 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId in ChainId]: Token } = {
   ),
   [ChainId.ABSTRACT_TESTNET]: new Token(
     ChainId.ABSTRACT_TESTNET,
-    '0x9EDCde0257F2386Ce177C3a7FCdd97787F0D841d', 18,
+    '0x9EDCde0257F2386Ce177C3a7FCdd97787F0D841d',
+    18,
     'WETH',
     'Wrapped Ether'
   ),
@@ -611,12 +622,19 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId in ChainId]: Token } = {
   [ChainId.ZERO]: new Token(
     ChainId.ZERO,
     '0xAc98B49576B1C892ba6BFae08fE1BB0d80Cf599c',
-     18,
+    18,
     'WETH',
     'Wrapped Ether'
   ),
   [ChainId.ASTROCHAIN_SEPOLIA]: new Token(
     ChainId.ASTROCHAIN_SEPOLIA,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [ChainId.BOB]: new Token(
+    ChainId.BOB,
     '0x4200000000000000000000000000000000000006',
     18,
     'WETH',

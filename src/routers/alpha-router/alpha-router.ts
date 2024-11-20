@@ -666,6 +666,7 @@ export class AlphaRouter
         case ChainId.WORLDCHAIN:
         case ChainId.ASTROCHAIN_SEPOLIA:
         case ChainId.BASE_GOERLI:
+        case ChainId.BOB:
           this.onChainQuoteProvider = new OnChainQuoteProvider(
             chainId,
             provider,

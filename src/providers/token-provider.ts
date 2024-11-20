@@ -1,7 +1,7 @@
+import { ChainId, Token } from '@abstractswap/sdk-core';
 import { Interface } from '@ethersproject/abi';
 import { BigNumber } from '@ethersproject/bignumber';
 import { parseBytes32String } from '@ethersproject/strings';
-import { ChainId, Token } from '@abstractswap/sdk-core';
 import _ from 'lodash';
 
 import { IERC20Metadata__factory } from '../types/v3/factories/IERC20Metadata__factory';
@@ -717,7 +717,7 @@ export const USDC_ZERO = new Token(
   6,
   'USDC',
   'USDC'
-)
+);
 export const USDC_WORLDCHAIN = new Token(
   ChainId.WORLDCHAIN,
   '0x79A02482A880bCE3F13e09Da970dC34db4CD24d1',
@@ -750,11 +750,19 @@ export const USDC_ASTROCHAIN_SEPOLIA = new Token(
   'USDC Token'
 );
 
+export const USDC_BOB = new Token(
+  ChainId.BOB,
+  '0xe75D0fB2C24A55cA1e3F96781a2bCC7bdba058F0',
+  6,
+  'USDC',
+  'USDC'
+);
+
 export class TokenProvider implements ITokenProvider {
   constructor(
     private chainId: ChainId,
     protected multicall2Provider: IMulticallProvider
-  ) { }
+  ) {}
 
   private async getTokenSymbol(
     addresses: string[],
@@ -899,8 +907,10 @@ export class TokenProvider implements ITokenProvider {
       }
 
       log.info(
-        `Got token symbol and decimals for ${Object.values(addressToToken).length
-        } out of ${addresses.length} tokens on-chain ${providerConfig ? `as of: ${providerConfig?.blockNumber}` : ''
+        `Got token symbol and decimals for ${
+          Object.values(addressToToken).length
+        } out of ${addresses.length} tokens on-chain ${
+          providerConfig ? `as of: ${providerConfig?.blockNumber}` : ''
         }`
       );
     }
@@ -1029,6 +1039,8 @@ export const USDC_ON = (chainId: ChainId): Token => {
       return USDC_WORLDCHAIN;
     case ChainId.ASTROCHAIN_SEPOLIA:
       return USDC_ASTROCHAIN_SEPOLIA;
+    case ChainId.BOB:
+      return USDC_BOB;
     default:
       throw new Error(`Chain id: ${chainId} not supported`);
   }

@@ -1,13 +1,13 @@
+import { ADDRESS_ZERO } from '@abstractswap/router-sdk';
 import {
-  ChainId,
   CHAIN_TO_ADDRESSES_MAP,
+  ChainId,
   Currency,
   SWAP_ROUTER_02_ADDRESSES as SWAP_ROUTER_02_ADDRESSES_HELPER,
   Token,
 } from '@abstractswap/sdk-core';
 import { FACTORY_ADDRESS } from '@abstractswap/v3-sdk';
 
-import { ADDRESS_ZERO } from '@abstractswap/router-sdk';
 import { NETWORKS_WITH_SAME_UNISWAP_ADDRESSES } from './chains';
 
 export const BNB_TICK_LENS_ADDRESS =
@@ -43,12 +43,14 @@ export const V3_CORE_FACTORY_ADDRESSES: AddressMap = {
   [ChainId.BLAST]: CHAIN_TO_ADDRESSES_MAP[ChainId.BLAST].v3CoreFactoryAddress,
   [ChainId.ZORA]: CHAIN_TO_ADDRESSES_MAP[ChainId.ZORA].v3CoreFactoryAddress,
   [ChainId.ZKSYNC]: CHAIN_TO_ADDRESSES_MAP[ChainId.ZKSYNC].v3CoreFactoryAddress,
-  [ChainId.ABSTRACT_TESTNET]: CHAIN_TO_ADDRESSES_MAP[ChainId.ABSTRACT_TESTNET].v3CoreFactoryAddress,
+  [ChainId.ABSTRACT_TESTNET]:
+    CHAIN_TO_ADDRESSES_MAP[ChainId.ABSTRACT_TESTNET].v3CoreFactoryAddress,
   [ChainId.ZERO]: CHAIN_TO_ADDRESSES_MAP[ChainId.ZERO].v3CoreFactoryAddress,
   [ChainId.WORLDCHAIN]:
     CHAIN_TO_ADDRESSES_MAP[ChainId.WORLDCHAIN].v3CoreFactoryAddress,
   [ChainId.ASTROCHAIN_SEPOLIA]:
     CHAIN_TO_ADDRESSES_MAP[ChainId.ASTROCHAIN_SEPOLIA].v3CoreFactoryAddress,
+  [ChainId.BOB]: CHAIN_TO_ADDRESSES_MAP[ChainId.BOB].v3CoreFactoryAddress,
   // TODO: Gnosis + Moonbeam contracts to be deployed
 };
 
@@ -74,12 +76,14 @@ export const QUOTER_V2_ADDRESSES: AddressMap = {
   [ChainId.BLAST]: CHAIN_TO_ADDRESSES_MAP[ChainId.BLAST].quoterAddress,
   [ChainId.ZORA]: CHAIN_TO_ADDRESSES_MAP[ChainId.ZORA].quoterAddress,
   [ChainId.ZKSYNC]: CHAIN_TO_ADDRESSES_MAP[ChainId.ZKSYNC].quoterAddress,
-  [ChainId.ABSTRACT_TESTNET]: CHAIN_TO_ADDRESSES_MAP[ChainId.ABSTRACT_TESTNET].quoterAddress,
+  [ChainId.ABSTRACT_TESTNET]:
+    CHAIN_TO_ADDRESSES_MAP[ChainId.ABSTRACT_TESTNET].quoterAddress,
   [ChainId.ZERO]: CHAIN_TO_ADDRESSES_MAP[ChainId.ZERO].quoterAddress,
   [ChainId.WORLDCHAIN]:
     CHAIN_TO_ADDRESSES_MAP[ChainId.WORLDCHAIN].quoterAddress,
   [ChainId.ASTROCHAIN_SEPOLIA]:
     CHAIN_TO_ADDRESSES_MAP[ChainId.ASTROCHAIN_SEPOLIA].quoterAddress,
+  [ChainId.BOB]: CHAIN_TO_ADDRESSES_MAP[ChainId.BOB].quoterAddress,
   // TODO: Gnosis + Moonbeam contracts to be deployed
 };
 
@@ -143,12 +147,14 @@ export const UNISWAP_MULTICALL_ADDRESSES: AddressMap = {
   [ChainId.BLAST]: CHAIN_TO_ADDRESSES_MAP[ChainId.BLAST].multicallAddress,
   [ChainId.ZORA]: CHAIN_TO_ADDRESSES_MAP[ChainId.ZORA].multicallAddress,
   [ChainId.ZKSYNC]: CHAIN_TO_ADDRESSES_MAP[ChainId.ZKSYNC].multicallAddress,
-  [ChainId.ABSTRACT_TESTNET]: CHAIN_TO_ADDRESSES_MAP[ChainId.ABSTRACT_TESTNET].multicallAddress,
+  [ChainId.ABSTRACT_TESTNET]:
+    CHAIN_TO_ADDRESSES_MAP[ChainId.ABSTRACT_TESTNET].multicallAddress,
   [ChainId.ZERO]: CHAIN_TO_ADDRESSES_MAP[ChainId.ZERO].multicallAddress,
   [ChainId.WORLDCHAIN]:
     CHAIN_TO_ADDRESSES_MAP[ChainId.WORLDCHAIN].multicallAddress,
   [ChainId.ASTROCHAIN_SEPOLIA]:
     CHAIN_TO_ADDRESSES_MAP[ChainId.ASTROCHAIN_SEPOLIA].multicallAddress,
+  [ChainId.BOB]: CHAIN_TO_ADDRESSES_MAP[ChainId.BOB].multicallAddress,
   // TODO: Gnosis + Moonbeam contracts to be deployed
 };
 
@@ -314,7 +320,7 @@ export const WETH9: {
   [ChainId.ABSTRACT_TESTNET]: new Token(
     ChainId.ABSTRACT_TESTNET,
     '0x9EDCde0257F2386Ce177C3a7FCdd97787F0D841d',
-     18,
+    18,
     'WETH',
     'Wrapped Ether'
   ),
@@ -328,11 +334,19 @@ export const WETH9: {
   [ChainId.ZERO]: new Token(
     ChainId.ZERO,
     '0xAc98B49576B1C892ba6BFae08fE1BB0d80Cf599c',
-     18,
+    18,
     'WETH',
-    'Wrapped Ether'),
+    'Wrapped Ether'
+  ),
   [ChainId.ASTROCHAIN_SEPOLIA]: new Token(
     ChainId.ASTROCHAIN_SEPOLIA,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [ChainId.BOB]: new Token(
+    ChainId.BOB,
     '0x4200000000000000000000000000000000000006',
     18,
     'WETH',

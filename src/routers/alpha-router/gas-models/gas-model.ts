@@ -1,4 +1,3 @@
-import { BigNumber } from '@ethersproject/bignumber';
 import {
   ChainId,
   CurrencyAmount as CurrencyAmountRaw,
@@ -6,6 +5,7 @@ import {
 } from '@abstractswap/sdk-core';
 import { Pair } from '@abstractswap/v2-sdk';
 import { Pool } from '@abstractswap/v3-sdk';
+import { BigNumber } from '@ethersproject/bignumber';
 
 import { ProviderConfig } from '../../../providers/provider';
 import {
@@ -23,7 +23,6 @@ import {
   DAI_SEPOLIA,
   DAI_ZKSYNC,
   USDB_BLAST,
-  USDCE_ZKSYNC,
   USDC_ABSTRACT_TESTNET,
   USDC_ARBITRUM,
   USDC_ARBITRUM_GOERLI,
@@ -32,6 +31,7 @@ import {
   USDC_AVAX,
   USDC_BASE,
   USDC_BNB,
+  USDC_BOB,
   USDC_BRIDGED_AVAX,
   USDC_CELO,
   USDC_ETHEREUM_GNOSIS,
@@ -54,6 +54,7 @@ import {
   USDC_ZERO,
   USDC_ZKSYNC,
   USDC_ZORA,
+  USDCE_ZKSYNC,
   USDT_ARBITRUM,
   USDT_BNB,
   USDT_GOERLI,
@@ -130,6 +131,7 @@ export const usdGasTokensByChain: { [chainId in ChainId]?: Token[] } = {
   [ChainId.ZERO]: [USDC_ZERO],
   [ChainId.WORLDCHAIN]: [USDC_WORLDCHAIN],
   [ChainId.ASTROCHAIN_SEPOLIA]: [USDC_ASTROCHAIN_SEPOLIA],
+  [ChainId.BOB]: [USDC_BOB],
 };
 
 export type L1ToL2GasCosts = {

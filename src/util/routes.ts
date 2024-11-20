@@ -1,10 +1,12 @@
 import { Protocol } from '@abstractswap/router-sdk';
+import { TPool } from '@abstractswap/router-sdk/dist/utils/TPool';
 import { Currency, Percent } from '@abstractswap/sdk-core';
 import { Pair } from '@abstractswap/v2-sdk';
 import { Pool as V3Pool } from '@abstractswap/v3-sdk';
 import { Pool as V4Pool } from '@abstractswap/v4-sdk';
 import _ from 'lodash';
 
+import { CachedRoutes } from '../providers';
 import {
   AlphaRouterConfig,
   RouteWithValidQuote,
@@ -13,9 +15,7 @@ import { MixedRoute, SupportedRoutes } from '../routers/router';
 
 import { V3_CORE_FACTORY_ADDRESSES } from './addresses';
 
-import { TPool } from '@abstractswap/router-sdk/dist/utils/TPool';
 import { CurrencyAmount } from '.';
-import { CachedRoutes } from '../providers';
 
 export const routeToTokens = (route: SupportedRoutes): Currency[] => {
   switch (route.protocol) {
@@ -131,7 +131,7 @@ export const routeAmountsToString = (
     const percent = new Percent(portion.numerator, portion.denominator);
     /// @dev special case for MIXED routes we want to show user friendly V2+V3 instead
     return `[${
-      protocol == Protocol.MIXED ? 'V2 + V3 + V4' : protocol
+      protocol == Protocol.MIXED ? 'V2 + V3' : protocol
     }] ${percent.toFixed(2)}% = ${routeToString(route)}`;
   });
 

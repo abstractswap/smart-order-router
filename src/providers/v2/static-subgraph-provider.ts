@@ -21,21 +21,22 @@ import {
   ETH_BNB,
   OP_OPTIMISM,
   USDB_BLAST,
-  USDCE_ZKSYNC,
   USDC_ABSTRACT_TESTNET,
   USDC_ARBITRUM,
   USDC_ASTROCHAIN_SEPOLIA,
   USDC_AVAX,
   USDC_BASE,
   USDC_BNB,
+  USDC_BOB,
   USDC_MAINNET,
   USDC_MOONBEAM,
   USDC_NATIVE_ARBITRUM,
   USDC_OPTIMISM,
   USDC_POLYGON,
-  USDC_ZERO,
   USDC_WORLDCHAIN,
+  USDC_ZERO,
   USDC_ZKSYNC,
+  USDCE_ZKSYNC,
   USDT_ARBITRUM,
   USDT_BNB,
   USDT_MAINNET,
@@ -130,10 +131,6 @@ const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     WRAPPED_NATIVE_CURRENCY[ChainId.ABSTRACT_TESTNET]!,
     USDC_ABSTRACT_TESTNET,
   ],
-  [ChainId.ZERO]: [
-    WRAPPED_NATIVE_CURRENCY[ChainId.ZERO]!,
-    USDC_ZERO,
-  ],
   [ChainId.WORLDCHAIN]: [
     WRAPPED_NATIVE_CURRENCY[ChainId.WORLDCHAIN]!,
     USDC_WORLDCHAIN,
@@ -144,6 +141,8 @@ const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     WRAPPED_NATIVE_CURRENCY[ChainId.ASTROCHAIN_SEPOLIA]!,
     USDC_ASTROCHAIN_SEPOLIA,
   ],
+  [ChainId.ZERO]: [WRAPPED_NATIVE_CURRENCY[ChainId.ZERO]!, USDC_ZERO],
+  [ChainId.BOB]: [WRAPPED_NATIVE_CURRENCY[ChainId.BOB]!, USDC_BOB],
 };
 
 /**
@@ -159,7 +158,7 @@ const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
  * @class StaticV2SubgraphProvider
  */
 export class StaticV2SubgraphProvider implements IV2SubgraphProvider {
-  constructor(private chainId: ChainId) { }
+  constructor(private chainId: ChainId) {}
 
   public async getPools(
     tokenIn?: Token,

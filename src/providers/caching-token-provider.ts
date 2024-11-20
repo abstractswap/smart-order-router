@@ -190,6 +190,9 @@ export const CACHE_SEED_TOKENS: {
     USDC: USDC_SEPOLIA,
     WETH: WRAPPED_NATIVE_CURRENCY[ChainId.ASTROCHAIN_SEPOLIA],
   },
+  [ChainId.BOB]: {
+    WETH: WRAPPED_NATIVE_CURRENCY[ChainId.BOB],
+  },
   // Currently we do not have providers for Moonbeam mainnet or Gnosis testnet
 };
 

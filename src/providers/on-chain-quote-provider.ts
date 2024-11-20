@@ -390,18 +390,10 @@ export class OnChainQuoteProvider implements IOnChainQuoteProvider {
       mixedRouteContainsV4Pool: boolean,
       protocol: Protocol,
       optimisticCachedRoutes: boolean
-    ) => string = (
-      chainId,
-      useMixedRouteQuoter,
-      mixedRouteContainsV4Pool,
-      protocol,
-      optimisticCachedRoutes
-    ) =>
+    ) => string = (chainId, useMixedRouteQuoter, optimisticCachedRoutes) =>
       useMixedRouteQuoter
-        ? `ChainId_${chainId}_${protocol}RouteQuoter${
-            mixedRouteContainsV4Pool ? 'V2' : 'V1'
-          }_OptimisticCachedRoutes${optimisticCachedRoutes}_`
-        : `ChainId_${chainId}_${protocol}Quoter_OptimisticCachedRoutes${optimisticCachedRoutes}_`
+        ? `ChainId_${chainId}_MixedQuoter_OptimisticCachedRoutes${optimisticCachedRoutes}_`
+        : `ChainId_${chainId}_V3Quoter_OptimisticCachedRoutes${optimisticCachedRoutes}_`
   ) {}
 
   private getQuoterAddress(
@@ -805,6 +797,11 @@ export class OnChainQuoteProvider implements IOnChainQuoteProvider {
               try {
                 totalCallsMade = totalCallsMade + 1;
 
+                const protocol = useMixedRouteQuoter
+                  ? Protocol.MIXED
+                  : useV4RouteQuoter
+                  ? Protocol.V4
+                  : Protocol.V3;
                 const results = await this.consolidateResults(
                   protocol,
                   useMixedRouteQuoter,
