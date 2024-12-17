@@ -51,6 +51,11 @@ export const V3_CORE_FACTORY_ADDRESSES: AddressMap = {
   [ChainId.ASTROCHAIN_SEPOLIA]:
     CHAIN_TO_ADDRESSES_MAP[ChainId.ASTROCHAIN_SEPOLIA].v3CoreFactoryAddress,
   [ChainId.BOB]: CHAIN_TO_ADDRESSES_MAP[ChainId.BOB].v3CoreFactoryAddress,
+  [ChainId.CYBER]: CHAIN_TO_ADDRESSES_MAP[ChainId.CYBER].v3CoreFactoryAddress,
+  [ChainId.SHAPE]: CHAIN_TO_ADDRESSES_MAP[ChainId.SHAPE].v3CoreFactoryAddress,
+  [ChainId.INK]: CHAIN_TO_ADDRESSES_MAP[ChainId.INK].v3CoreFactoryAddress,
+  [ChainId.REDSTONE]: CHAIN_TO_ADDRESSES_MAP[ChainId.REDSTONE].v3CoreFactoryAddress,
+  [ChainId.REDSTONE_GARNET]: CHAIN_TO_ADDRESSES_MAP[ChainId.REDSTONE_GARNET].v3CoreFactoryAddress,
   // TODO: Gnosis + Moonbeam contracts to be deployed
 };
 
@@ -84,6 +89,11 @@ export const QUOTER_V2_ADDRESSES: AddressMap = {
   [ChainId.ASTROCHAIN_SEPOLIA]:
     CHAIN_TO_ADDRESSES_MAP[ChainId.ASTROCHAIN_SEPOLIA].quoterAddress,
   [ChainId.BOB]: CHAIN_TO_ADDRESSES_MAP[ChainId.BOB].quoterAddress,
+  [ChainId.CYBER]: CHAIN_TO_ADDRESSES_MAP[ChainId.CYBER].quoterAddress,
+  [ChainId.SHAPE]: CHAIN_TO_ADDRESSES_MAP[ChainId.SHAPE].quoterAddress,
+  [ChainId.INK]: CHAIN_TO_ADDRESSES_MAP[ChainId.INK].quoterAddress,
+  [ChainId.REDSTONE]: CHAIN_TO_ADDRESSES_MAP[ChainId.REDSTONE].quoterAddress,
+  [ChainId.REDSTONE_GARNET]: CHAIN_TO_ADDRESSES_MAP[ChainId.REDSTONE_GARNET].quoterAddress,
   // TODO: Gnosis + Moonbeam contracts to be deployed
 };
 
@@ -155,6 +165,11 @@ export const UNISWAP_MULTICALL_ADDRESSES: AddressMap = {
   [ChainId.ASTROCHAIN_SEPOLIA]:
     CHAIN_TO_ADDRESSES_MAP[ChainId.ASTROCHAIN_SEPOLIA].multicallAddress,
   [ChainId.BOB]: CHAIN_TO_ADDRESSES_MAP[ChainId.BOB].multicallAddress,
+  [ChainId.CYBER]: CHAIN_TO_ADDRESSES_MAP[ChainId.CYBER].multicallAddress,
+  [ChainId.SHAPE]: CHAIN_TO_ADDRESSES_MAP[ChainId.SHAPE].multicallAddress,
+  [ChainId.INK]: CHAIN_TO_ADDRESSES_MAP[ChainId.INK].multicallAddress,
+  [ChainId.REDSTONE]: CHAIN_TO_ADDRESSES_MAP[ChainId.REDSTONE].multicallAddress,
+  [ChainId.REDSTONE_GARNET]: CHAIN_TO_ADDRESSES_MAP[ChainId.REDSTONE_GARNET].multicallAddress,
   // TODO: Gnosis + Moonbeam contracts to be deployed
 };
 
@@ -347,6 +362,41 @@ export const WETH9: {
   ),
   [ChainId.BOB]: new Token(
     ChainId.BOB,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [ChainId.CYBER]: new Token(
+    ChainId.CYBER,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [ChainId.SHAPE]: new Token(
+    ChainId.SHAPE,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [ChainId.INK]: new Token(
+    ChainId.INK,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [ChainId.REDSTONE]: new Token(
+    ChainId.REDSTONE,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [ChainId.REDSTONE_GARNET]: new Token(
+    ChainId.REDSTONE_GARNET,
     '0x4200000000000000000000000000000000000006',
     18,
     'WETH',

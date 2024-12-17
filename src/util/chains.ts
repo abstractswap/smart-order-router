@@ -31,6 +31,7 @@ export const SUPPORTED_CHAINS: ChainId[] = [
   ChainId.WORLDCHAIN,
   ChainId.ASTROCHAIN_SEPOLIA,
   ChainId.BOB,
+  ChainId.CYBER,
   // Gnosis and Moonbeam don't yet have contracts deployed yet
 ];
 
@@ -45,6 +46,11 @@ export const V2_SUPPORTED = [
   ChainId.AVALANCHE,
   ChainId.ABSTRACT_TESTNET,
   ChainId.ZERO,
+  ChainId.CYBER,
+  ChainId.SHAPE,
+  ChainId.INK,
+  ChainId.REDSTONE,
+  ChainId.REDSTONE_GARNET,
 ];
 
 export const V4_SUPPORTED = [ChainId.SEPOLIA];
@@ -68,6 +74,7 @@ export const HAS_L1_FEE = [
   ChainId.ZORA,
   ChainId.WORLDCHAIN,
   ChainId.ASTROCHAIN_SEPOLIA,
+  //Omitting redstone
 ];
 
 export const NETWORKS_WITH_SAME_UNISWAP_ADDRESSES = [
@@ -135,6 +142,16 @@ export const ID_TO_CHAIN_ID = (id: number): ChainId => {
       return ChainId.ASTROCHAIN_SEPOLIA;
     case 60808:
       return ChainId.BOB;
+    case 7560:
+      return ChainId.CYBER;
+    case 360:
+      return ChainId.SHAPE;
+    case 57073:
+      return ChainId.INK;
+    case 690:
+      return ChainId.REDSTONE;
+    case 17069:
+      return ChainId.REDSTONE_GARNET;
     default:
       throw new Error(`Unknown chain id: ${id}`);
   }
@@ -168,6 +185,11 @@ export enum ChainName {
   WORLDCHAIN = 'worldchain-mainnet',
   ASTROCHAIN_SEPOLIA = 'astrochain-sepolia',
   BOB = 'bob',
+  CYBER = 'cyeth',
+  SHAPE = 'shape',
+  INK = 'ink',
+  REDSTONE = 'redstone',
+  REDSTONE_GARNET = 'redstone-garnet',
 }
 
 export enum NativeCurrencyName {
@@ -283,6 +305,27 @@ export const NATIVE_NAMES_BY_ID: { [chainId: number]: string[] } = {
     '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
   ],
   [ChainId.BOB]: ['ETH', 'ETHER', '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'],
+  [ChainId.CYBER]: [
+    'ETH',
+    'ETHER',
+    '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+  ],
+  [ChainId.SHAPE]: [
+    'ETH',
+    'ETHER',
+    '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+  ],
+  [ChainId.INK]: ['ETH', 'ETHER', '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'],
+  [ChainId.REDSTONE]: [
+    'ETH',
+    'ETHER',
+    '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+  ],
+  [ChainId.REDSTONE_GARNET]: [
+    'ETH',
+    'ETHER',
+    '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+  ],
 };
 
 export const NATIVE_CURRENCY: { [chainId: number]: NativeCurrencyName } = {
@@ -312,6 +355,11 @@ export const NATIVE_CURRENCY: { [chainId: number]: NativeCurrencyName } = {
   [ChainId.WORLDCHAIN]: NativeCurrencyName.ETHER,
   [ChainId.ASTROCHAIN_SEPOLIA]: NativeCurrencyName.ETHER,
   [ChainId.BOB]: NativeCurrencyName.ETHER,
+  [ChainId.CYBER]: NativeCurrencyName.ETHER,
+  [ChainId.SHAPE]: NativeCurrencyName.ETHER,
+  [ChainId.INK]: NativeCurrencyName.ETHER,
+  [ChainId.REDSTONE]: NativeCurrencyName.ETHER,
+  [ChainId.REDSTONE_GARNET]: NativeCurrencyName.ETHER,
 };
 
 export const ID_TO_NETWORK_NAME = (id: number): ChainName => {
@@ -370,6 +418,16 @@ export const ID_TO_NETWORK_NAME = (id: number): ChainName => {
       return ChainName.ASTROCHAIN_SEPOLIA;
     case 60808:
       return ChainName.BOB;
+    case 7560:
+      return ChainName.CYBER;
+    case 360:
+      return ChainName.SHAPE;
+    case 57073:
+      return ChainName.INK;
+    case 690:
+      return ChainName.REDSTONE;
+    case 17069:
+      return ChainName.REDSTONE_GARNET;
     default:
       throw new Error(`Unknown chain id: ${id}`);
   }
@@ -429,6 +487,16 @@ export const ID_TO_PROVIDER = (id: ChainId): string => {
       return process.env.JSON_RPC_PROVIDER_ASTROCHAIN_SEPOLIA!;
     case ChainId.BOB:
       return process.env.JSON_RPC_PROVIDER_BOB!;
+    case ChainId.CYBER:
+      return process.env.JSON_RPC_PROVIDER_CYBER!;
+    case ChainId.SHAPE:
+      return process.env.JSON_RPC_PROVIDER_SHAPE!;
+    case ChainId.INK:
+      return process.env.JSON_RPC_PROVIDER_INK!;
+    case ChainId.REDSTONE:
+      return process.env.JSON_RPC_PROVIDER_REDSTONE!;
+    case ChainId.REDSTONE_GARNET:
+      return process.env.JSON_RPC_PROVIDER_REDSTONE_GARNET!;
     default:
       throw new Error(`Chain id: ${id} not supported`);
   }
@@ -635,6 +703,41 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId in ChainId]: Token } = {
   ),
   [ChainId.BOB]: new Token(
     ChainId.BOB,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [ChainId.CYBER]: new Token(
+    ChainId.CYBER,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [ChainId.SHAPE]: new Token(
+    ChainId.SHAPE,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [ChainId.INK]: new Token(
+    ChainId.INK,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [ChainId.REDSTONE]: new Token(
+    ChainId.REDSTONE,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [ChainId.REDSTONE_GARNET]: new Token(
+    ChainId.REDSTONE_GARNET,
     '0x4200000000000000000000000000000000000006',
     18,
     'WETH',
