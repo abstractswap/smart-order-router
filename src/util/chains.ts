@@ -52,15 +52,9 @@ export const V2_SUPPORTED = [
   ChainId.CYBER,
   ChainId.SHAPE,
   ChainId.INK,
-<<<<<<< HEAD
   ChainId.REDSTONE,
   ChainId.REDSTONE_GARNET,
-=======
-  // Enable once supported
-  // ChainId.REDSTONE,
-  // ChainId.REDSTONE_GARNET,
   ChainId.ABSTRACT_MAINNET,
->>>>>>> c76d6a528678b3c4304fa9ae754125fc6bd31b40
 ];
 
 export const V4_SUPPORTED = [ChainId.SEPOLIA];
@@ -202,10 +196,7 @@ export enum ChainName {
   INK = 'ink',
   REDSTONE = 'redstone',
   REDSTONE_GARNET = 'redstone-garnet',
-<<<<<<< HEAD
-=======
   ABSTRACT_MAINNET = 'abstract',
->>>>>>> c76d6a528678b3c4304fa9ae754125fc6bd31b40
 }
 
 export enum NativeCurrencyName {
