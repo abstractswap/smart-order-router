@@ -768,6 +768,14 @@ export const USDC_ABSTRACT_MAINNET = new Token(
   'Bridged USDC'
 );
 
+export const USDC_ANIME = new Token(
+  ChainId.ANIME,
+  '0x401eCb1D350407f13ba348573E5630B83638E30D',
+  6,
+  'USDC',
+  'USDC'
+);
+
 export const USDC_ANIME_TESTNET = new Token(
   ChainId.ANIME_TESTNET,
   '0x69D30A49fcbaB7142d604635772B7Eef958aE0bd',

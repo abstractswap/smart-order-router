@@ -241,6 +241,7 @@ const baseTokensByChain: { [chainId in ChainId]?: Token[] } = {
     WRAPPED_NATIVE_CURRENCY[ChainId.ABSTRACT_MAINNET]!,
   ],
   [ChainId.ANIME_TESTNET]: [WRAPPED_NATIVE_CURRENCY[ChainId.ANIME_TESTNET]!],
+  [ChainId.ANIME]: [WRAPPED_NATIVE_CURRENCY[ChainId.ANIME]!],
   [ChainId.MODE]: [WRAPPED_NATIVE_CURRENCY[ChainId.MODE]!],
 };
 

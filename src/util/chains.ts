@@ -192,6 +192,7 @@ export enum ChainName {
   REDSTONE_GARNET = 'redstone-garnet',
   ABSTRACT_MAINNET = 'abstract',
   ANIME_TESTNET = 'anime-testnet',
+  ANIME = 'anime',
   MODE = 'mode',
 }
 
@@ -204,6 +205,7 @@ export enum NativeCurrencyName {
   MOONBEAM = 'GLMR',
   BNB = 'BNB',
   AVALANCHE = 'AVAX',
+  ANIME_TESTNET = 'ANIME',
   ANIME = 'ANIME',
 }
 
@@ -330,6 +332,11 @@ export const NATIVE_NAMES_BY_ID: { [chainId: number]: string[] } = {
     'ETHER',
     '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
   ],
+  [ChainId.ANIME]: [
+    'ETH',
+    'ETHER',
+    '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+  ],
   [ChainId.MODE]: [
     'ETH',
     'ETHER',
@@ -369,7 +376,8 @@ export const NATIVE_CURRENCY: { [chainId: number]: NativeCurrencyName } = {
   [ChainId.REDSTONE_GARNET]: NativeCurrencyName.ETHER,
   [ChainId.ABSTRACT_MAINNET]: NativeCurrencyName.ETHER,
   [ChainId.ANIME_TESTNET]: NativeCurrencyName.ETHER,
-  [ChainId.MODE]: NativeCurrencyName.ETHER
+  [ChainId.ANIME]: NativeCurrencyName.ANIME,
+  [ChainId.MODE]: NativeCurrencyName.ETHER,
 };
 
 export const ID_TO_NETWORK_NAME = (id: number): ChainName => {
@@ -438,6 +446,8 @@ export const ID_TO_NETWORK_NAME = (id: number): ChainName => {
       return ChainName.ABSTRACT_MAINNET;
     case 6900:
       return ChainName.ANIME_TESTNET;
+    case 69000:
+      return ChainName.ANIME;
     case 34443:
       return ChainName.MODE;
     default:
@@ -509,6 +519,8 @@ export const ID_TO_PROVIDER = (id: ChainId): string => {
       return process.env.JSON_RPC_PROVIDER_ABSTRACT_MAINNET!;
     case ChainId.ANIME_TESTNET:
       return process.env.JSON_RPC_PROVIDER_ANIME_TESTNET!;
+    case ChainId.ANIME:
+      return process.env.JSON_RPC_PROVIDER_ANIME!;
     case ChainId.MODE:
       return process.env.JSON_RPC_PROVIDER_MODE!;
     default:
@@ -756,6 +768,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId in ChainId]: Token } = {
     18,
     'WETH',
     'Wrapped Ether'
+  ),
+  [ChainId.ANIME]: new Token(
+    ChainId.ANIME,
+    '0x164906a76f1A2Ea933366c446AE0Ec6a37062c42',
+    18,
+    'WANIME',
+    'Wrapped ANIME'
   ),
   [ChainId.MODE]: new Token(
     ChainId.MODE,
